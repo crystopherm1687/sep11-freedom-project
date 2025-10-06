@@ -1,13 +1,15 @@
 # Tool Learning Log
 
-## Tool: **X**
+## Tool: **Json API's**
 
-## Project: **X**
+## Project: **Random Quote generator**
 
 ---
 
-### X/X/XX:
-* Text
+### 10/3/25:
+* This tool has requests and responses to a server and a client.
+* (https://www.youtube.com/watch?v=cj3h3Fb10QY)
+* How to start using api's (https://restfulapi.net/introduction-to-json/)
 
 ### X/X/XX:
 * Text
