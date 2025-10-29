@@ -1,0 +1,71 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quote Generator</title>
+</head>
+<body>
+    <h1>Random Quote Generator</h1>
+    <p id="quote"></p>
+    <button id="new-quote">New Quote</button>
+<script>
+function fetchRandomQuote() {
+    fetch('https://api.quotable.io/random')
+        .then(response => response.json())
+        .then(data => {
+            const quote = data.content;
+            document.getElementById("quote").textContent = quote;
+        })
+        .catch(error => {
+            console.error('Error fetching quote:', error);
+        });
+}
+
+
+document.getElementById("new-quote").addEventListener("click", fetchRandomQuote);
+
+fetchRandomQuote();
+</script>
+
+
+
+
+<style>
+    body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+}
+
+#quote {
+    font-size: 1.2rem;
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+#new-quote {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#new-quote:hover {
+    background-color: #0056b3;}
+</style>
+
+</body>
+</html>
