@@ -13,7 +13,7 @@
     <button id="new-quote">New Quote</button>
 <script>
 function fetchRandomQuote() {
-    fetch('https://api.quotable.io/random')
+    fetch('')
         .then(response => response.json())
         .then(data => {
             const quote = data.content;
@@ -28,7 +28,34 @@ function fetchRandomQuote() {
 document.getElementById("new-quote").addEventListener("click", fetchRandomQuote);
 
 fetchRandomQuote();
+
+fetch('http://api.forismatic.com/api/1.0/') // Replace with your API endpoint
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json(); // Or response.text() for plain text
+  })
+  .then(data => {
+    console.log(data); // Process the received data
+  })
+  .catch(error => {
+    console.error('Error making API call:', error);
+  });
 </script>
+
+<!-- Post:
+method=getQuote&key=457653&format=xml&lang=en
+
+response:
+<forismatic>
+<quote>
+<quoteText>Brevity — the soul of wit</quoteText>
+<quoteAuthor></quoteAuthor>
+<senderName>name or nickname of the quote sender</senderName>
+<senderLink>http://api.forismatic.com/api/1.0/</senderLink>
+</quote>
+</forismatic> -->
 
 
 
