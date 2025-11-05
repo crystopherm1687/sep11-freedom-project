@@ -6,7 +6,7 @@ For my tool I have decided to go with Api's because I wanted to make a quote gen
 #### Sources
 text
 ### EDP
-I am in the first stage of the engineering design process
+I am in the first stage of the engineering design process because my progress so far is adapting to use Api's and understand how they work so I can successfully call a server for information and put it on a website.
 ### Skills
 text
 
