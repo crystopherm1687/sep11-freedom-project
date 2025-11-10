@@ -18,7 +18,7 @@ function fetchRandomQuote() {
         });
 }
 ```
-This is some code that would help me process information from that server and input it onto my generator. Considering the knowledge I have so far it is something but not good enough to help me look through the information as I'm only calling the URL with no addition data that it would require. For now I will keep testing it out and see how the detailed Api call examples work so I don't get stuck on this part. 
+This is some code that would help me process information from that server and input it onto my generator. Considering the knowledge I have so far it is something, but not good enough to help me look through the information as I'm only calling the URL with no addition data that it would require. For now I will keep testing it out and see how the detailed Api call examples work so I don't get stuck on this part. Addtionally now that a function has been created I can use it as my placeholder or main example for when I make a different line of code that achieves the requirements and gives me precise information.
 #### Sources
 <!-- links, videos, websites -->
 * https://forismatic.com/en/api/
