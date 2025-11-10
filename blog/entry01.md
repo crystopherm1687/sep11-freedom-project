@@ -18,7 +18,7 @@ function fetchRandomQuote() {
         });
 }
 ```
-This is some code that would help me process information from said server and input it onto my generator.
+This is some code that would help me process information from that server and input it onto my generator.
 #### Sources
 <!-- links, videos, websites -->
 * https://forismatic.com/en/api/
