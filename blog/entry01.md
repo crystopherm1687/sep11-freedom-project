@@ -3,9 +3,23 @@
 
 ### Content
 <!-- Talk about progress and intro to tool -->
-For my tool I have decided to go with Api's because I wanted to make a quote generator for my project. In my case this project is proving to be slightly difficult because of how much learning I need to do in order to pull off the full use of my tool. Since Api's rely on a server that means I have to call it 
+For my tool I have decided to go with Api's because I wanted to make a quote generator for my project. In my case this project is proving to be slightly difficult because of how much learning I need to do in order to pull off the full use of my tool. Since Api's rely on a server that means I have to call it
 
 text
+'''
+function fetchRandomQuote() {
+    fetch('link')
+        .then(response => response.json())
+        .then(data => {
+            const quote = data.content;
+            document.getElementById("quote").textContent = quote;
+        })
+        .catch(error => {
+            console.error('Error fetching quote:', error);
+        });
+}
+'''
+This is some code that would help me process information from said server and input it onto my generator.
 #### Sources
 <!-- links, videos, websites -->
 * https://forismatic.com/en/api/
