@@ -3,7 +3,7 @@
 
 ### Content
 <!-- Talk about progress and intro to tool -->
-For my tool I have decided to go with Api's because I wanted to make a quote generator for my project. In my learning stage i found that it is simple to make an
+For my tool I have decided to go with Api's because I wanted to make a quote generator for my project. In my case this project is proving to be slightly difficult because of how much learning I need to do in order to pull off the full use of my tool. Since Api's rely on a server that means I have to call it 
 
 text
 #### Sources
