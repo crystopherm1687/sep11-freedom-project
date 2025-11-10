@@ -16,8 +16,10 @@ I am in the first stage of the engineering design process because my progress so
 ### Skills
 <!-- Talk about the specifics, how, when, -->
 * Time management
+text
 
-* 
+* Critical thinking
+text
 
 
 [Next](entry02.md)
