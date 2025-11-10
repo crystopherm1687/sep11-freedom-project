@@ -4,10 +4,12 @@
 ### Content
 <!-- Talk about progress and intro to tool -->
 For my tool I have decided to go with Api's because I wanted to make a quote generator for my project. In my learning stage i found that it is simple to make an
+
+text
 #### Sources
 <!-- links, videos, websites -->
 * https://forismatic.com/en/api/
-* t
+* https://coda.io/@mark-davis/random-quote
 * text
 * text
 ### EDP
