@@ -1,0 +1,26 @@
+<script>const URL = "http://api.forismatic.com/api/1.0/";
+
+
+
+async function fetchdata() {
+  const response = await fetch(URL);
+  method=getQuote&key=457653&format=xml&lang=en
+  const data = await response.json();
+  console.log(data);
+
+}
+
+fetchdata();
+console.log("End of code")
+</script>
+<!-- change -->
+<html>
+    <forismatic>
+<quote>
+<quoteText>Brevity — the soul of wit</quoteText>
+<quoteAuthor></quoteAuthor>
+<senderName>name or nickname of the quote sender</senderName>
+<senderLink>email or website address of the quote sender</senderLink>
+</quote>
+</forismatic>
+</html>
