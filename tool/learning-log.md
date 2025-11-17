@@ -30,7 +30,7 @@ async function fetchdata() {
 }
 ```
 * Another detail that I found is that if I were to connect a button to the Api call then it would be in this form.
-`
+`document.getElementById('fetchButton').addEventListener('click', getApiData);`
 * I'm still trying to figure out what the Api will do and how i can access the quote information so I need to focus on adjusting the code so that I can do it.
 
 
