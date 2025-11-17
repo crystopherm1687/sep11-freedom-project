@@ -17,6 +17,23 @@
 * So far i have a test website that should display a quote currently in progress.
 * `https://forismatic.com/en/api/` is a site to see how an api works and using some examples for my testing.
 
+### 11/16/25
+
+* Watched a youtube video and saw this code I could test out. Basically the guy used his own Api to pull information about a character but i applied it to my case to see what would happen.
+```
+const URL = "http://api.forismatic.com/api/1.0/";
+
+async function fetchdata() {
+  const response = await fetch(URL)
+  const data = await response.json();
+  console.log(data);
+}
+```
+* Another detail that I found is that if I were to connect a button to the Api call then it would be in this form.
+`
+* I'm still trying to figure out what the Api will do and how i can access the quote information so I need to focus on adjusting the code so that I can do it.
+
+
 
 <!--
 * Links you used today (websites, videos, etc)

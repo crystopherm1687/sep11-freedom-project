@@ -1,7 +1,47 @@
 
 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Fetch Example</title>
+</head>
+<body>
+  <h1>Fetch Data from API</h1>
 
+  <!-- Button that will trigger the fetch when clicked -->
+  <button id="fetchButton">Fetch Data</button>
+
+  <div id="result">
+    <!-- API data will be displayed here -->
+  </div>
+
+  <script>
+    // Async function to fetch data from the API
+    async function getApiData() {
+      try {
+        const response = await fetch('http://api.forismatic.com/api/1.0/.'); // Replace with your API endpoint
+        if (!response.ok) throw new Error(`Error: ${response.status}`);
+        const data = await response.json();
+
+        // Display data in the result div
+        document.getElementById('result').innerHTML = JSON.stringify(data, null, 2);
+        console.log('API Data:', data);
+      } catch (error) {
+        console.error('Fetch failed:', error);
+        document.getElementById('result').innerHTML = 'Error fetching data.';
+      }
+    }
+
+    // Connect the async function to the button click
+    document.getElementById('fetchButton').addEventListener('click', getApiData);
+  </script>
+</body>
+</html>
+
+<!--
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,40 +50,60 @@
 <body>
     <h1>Random Quote Generator</h1>
     <p id="quote"></p>
-    <button id="new-quote">New Quote</button>
-<script>
-function fetchRandomQuote() {
-    fetch('')
-        .then(response => response.json())
-        .then(data => {
-            const quote = data.content;
-            document.getElementById("quote").textContent = quote;
-        })
-        .catch(error => {
-            console.error('Error fetching quote:', error);
-        });
-}
+    <button id="fetchbutton">New Quote</button>
+<script> -->
+<!-- // function fetchRandomQuote() {
+//     fetch('')
+//         .then(response => response.json())
+//         .then(data => {
+//             const quote = data.content;
+//             document.getElementById("quote").textContent = quote;
+//         })
+//         .catch(error => {
+//             console.error('Error fetching quote:', error);
+//         });
+// }
 
 
-document.getElementById("new-quote").addEventListener("click", fetchRandomQuote);
+// document.getElementById("new-quote").addEventListener("click", fetchRandomQuote);
 
-fetchRandomQuote();
+// fetchRandomQuote();
 
-fetch('http://api.forismatic.com/api/1.0/') // Replace with your API endpoint
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json(); // Or response.text() for plain text
-  })
-  .then(data => {
-    console.log(data); // Process the received data
-  })
-  .catch(error => {
-    console.error('Error making API call:', error);
-  });
-</script>
+// fetch('http://api.forismatic.com/api/1.0/') // Replace with your API endpoint
+//   .then(response => {
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+//     return response.json(); // Or response.text() for plain text
+//   })
+//   .then(data => {
+//     console.log(data); // Process the received data
+//   })
+//   .catch(error => {
+//     console.error('Error making API call:', error);
+//   });
+// // </script>
+// <script>
+// async function getApiData() {
+//   try {
+//         const response = await fetch('http://api.forismatic.com/api/1.0/.'); // Replace with your API endpoint
+//         if (!response.ok) throw new Error(`Error: ${response.status}`);
+//         const data = await response.json();
 
+//         document.getElementById('result').innerHTML = JSON.stringify(data, null, 2);
+//         console.log('API Data:', data);
+//       } catch (error) {
+//         console.error('Fetch failed:', error);
+//         document.getElementById('result').innerHTML = 'Error fetching data.';
+//       }
+
+//     }
+
+
+// getApiData();
+
+// document.getElementById('fetchButton').addEventListener('click', getApiData);
+// </script>
 <!-- Post:
 method=getQuote&key=457653&format=xml&lang=en
 
@@ -60,7 +120,7 @@ response:
 
 
 
-<style>
+<!-- <style>
     body {
     text-align: center;
     font-family: Arial, sans-serif;
@@ -95,4 +155,4 @@ h1 {
 </style>
 
 </body>
-</html>
+</html> --> -->
