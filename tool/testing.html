@@ -1,57 +1,103 @@
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Fetch Example</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Quote Generator</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      text-align: center;
+      padding: 40px;
+    }
+
+    #quote-box {
+      background: white;
+      padding: 25px;
+      margin: auto;
+      width: 70%;
+      max-width: 700px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    #quote-text {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    #quote-author {
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
 </head>
 <body>
-  <h1>Fetch Data from API</h1>
 
-  <!-- Button that will trigger the fetch when clicked -->
-  <button id="fetchButton">Fetch Data</button>
-
-  <div id="result">
-    <!-- API data will be displayed here -->
+  <div id="quote-box">
+    <div id="quote-text">Click the button to load a quote</div>
+    <div id="quote-author"></div>
+    <button onclick="getQuote()">Get New Quote</button>
   </div>
 
   <script>
-    // Async function to fetch data from the API
-    async function getApiData() {
-      try {
-        const response = await fetch('http://api.forismatic.com/api/1.0/.'); // Replace with your API endpoint
-        if (!response.ok) throw new Error(`Error: ${response.status}`);
-        const data = await response.json();
+    function getQuote() {
+      fetch("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en")
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("quote-text").innerText = data.quoteText;
 
-        // Display data in the result div
-        document.getElementById('result').innerHTML = JSON.stringify(data, null, 2);
-        console.log('API Data:', data);
-      } catch (error) {
-        console.error('Fetch failed:', error);
-        document.getElementById('result').innerHTML = 'Error fetching data.';
-      }
+          document.getElementById("quote-author").innerText =
+            data.quoteAuthor ? `— ${data.quoteAuthor}` : "— Unknown";
+        })
+        .catch(err => {
+          console.error("API error:", err);
+          document.getElementById("quote-text").innerText =
+            "Could not load quote. Try again!";
+        });
     }
-
-    // Connect the async function to the button click
-    document.getElementById('fetchButton').addEventListener('click', getApiData);
   </script>
+
 </body>
 </html>
 
-<!--
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Quote Generator</title>
-</head>
-<body>
-    <h1>Random Quote Generator</h1>
-    <p id="quote"></p>
-    <button id="fetchbutton">New Quote</button>
-<script> -->
+<script>
+async function getQuote() {
+  try {
+    const url = "https://api.allorigins.win/raw?url=" +
+      encodeURIComponent("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en");
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    document.getElementById("quote-text").innerText = data.quoteText;
+    document.getElementById("quote-author").innerText =
+      data.quoteAuthor ? `— ${data.quoteAuthor}` : "— Unknown";
+  } catch (err) {
+    console.error(err);
+    document.getElementById("quote-text").innerText = "Could not load quote.";
+  }
+}
+</script>
+
 <!-- // function fetchRandomQuote() {
 //     fetch('')
 //         .then(response => response.json())

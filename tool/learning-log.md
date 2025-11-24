@@ -33,6 +33,16 @@ async function fetchdata() {
 `document.getElementById('fetchButton').addEventListener('click', getApiData);`
 * I'm still trying to figure out what the Api will do and how i can access the quote information so I need to focus on adjusting the code so that I can do it.
 
+### 11/23/25
+
+* Woah now this is cool, I finally got the Api to send data to my server as it was being called. I'm confident this project is good and now all I need is extra details and decor. It turns out that the Api itself is old which is nomral so I had to improvise and get other parts that allowed me to access the information inside the forismatic Api.
+* Here is what that extra code looks like.
+```
+const url = "https://api.allorigins.win/raw?url=" +
+      encodeURIComponent("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en");
+```
+* The site isn't perfect yet but it will be fixed soon as i configure more about the call function for different quotes.
+
 
 
 <!--
