@@ -1,204 +1,159 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Random Quote Generator</title>
+<meta charset="UTF-8">
+<title>Random quote generator</title>
 
-  <style>
+<style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      text-align: center;
-      padding: 40px;
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        color: #fff;
     }
 
-    #quote-box {
-      background: white;
-      padding: 25px;
-      margin: auto;
-      width: 70%;
-      max-width: 700px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    .card {
+        width: 420px;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 30px;
+        border-radius: 16px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity .6s ease, transform .6s ease;
     }
 
-    #quote-text {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
+    .card.show {
+        opacity: 1;
+        transform: translateY(0);
     }
 
-    #quote-author {
-      font-size: 1.1rem;
-      color: #555;
+    #quote {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    #author {
+        font-size: 1rem;
+        opacity: 0.8;
+        text-align: right;
+        margin-bottom: 20px;
     }
 
     button {
-      margin-top: 25px;
-      padding: 12px 20px;
-      font-size: 1rem;
-      border: none;
-      background: #007bff;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
+        width: 100%;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 10px;
+        background: #ffd369;
+        font-size: 1.05rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform .15s ease, box-shadow .15s ease;
     }
 
     button:hover {
-      background: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
-  </style>
+
+    button:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    /* Spinner */
+    .spinner {
+        border: 4px solid rgba(255,255,255,0.2);
+        border-top: 4px solid #ffd369;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        animation: spin 0.8s linear infinite;
+        margin: auto;
+        display: none;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
 </head>
 <body>
 
-  <div id="quote-box">
-    <div id="quote-text">Click the button to load a quote</div>
-    <div id="quote-author"></div>
-    <button onclick="getQuote()">Get New Quote</button>
-  </div>
+<div class="card" id="card">
+    <div class="spinner" id="spinner"></div>
 
-  <script>
-    function getQuote() {
-      fetch("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en")
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById("quote-text").innerText = data.quoteText;
+    <div id="content" style="display:none;">
+        <div id="quote"></div>
+        <div id="author"></div>
+        <button id="newQuoteBtn">New Quote</button>
+    </div>
+</div>
 
-          document.getElementById("quote-author").innerText =
-            data.quoteAuthor ? `— ${data.quoteAuthor}` : "— Unknown";
-        })
-        .catch(err => {
-          console.error("API error:", err);
-          document.getElementById("quote-text").innerText =
-            "Could not load quote. Try again!";
-        });
-    }
-  </script>
+<script>
+// ===============================
+//      FORISMATIC JSONP CALL
+// ===============================
+function fetchdata() {
+    showLoading();
+
+    const callbackName = "forismaticCallback_" + Math.random().toString(36).substring(2);
+
+    window[callbackName] = function(data) {
+        document.getElementById("quote").textContent = "“" + data.quoteText.trim() + "”";
+        document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
+
+        hideLoading();
+
+        delete window[callbackName];
+        script.remove();
+    };
+
+    const script = document.createElement("script");
+    script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
+    document.body.appendChild(script);
+}
+
+// ===============================
+//           LOADING STATES
+// ===============================
+function showLoading() {
+    document.getElementById("spinner").style.display = "block";
+    document.getElementById("content").style.display = "none";
+}
+
+function hideLoading() {
+    setTimeout(() => {
+        document.getElementById("spinner").style.display = "none";
+        document.getElementById("content").style.display = "block";
+
+        const card = document.getElementById("card");
+        card.classList.remove("show");
+        void card.offsetWidth; // restart animation
+        card.classList.add("show");
+
+    }, 700); // adds smoothness
+}
+
+// ===============================
+//       INITIAL CALL + BUTTON
+// ===============================
+fetchdata();
+document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
+
+</script>
 
 </body>
 </html>
 
-<script>
-async function getQuote() {
-  try {
-    const url = "https://api.allorigins.win/raw?url=" +
-      encodeURIComponent("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en");
-
-    const response = await fetch(url);
-    const data = await response.json();
-
-    document.getElementById("quote-text").innerText = data.quoteText;
-    document.getElementById("quote-author").innerText =
-      data.quoteAuthor ? `— ${data.quoteAuthor}` : "— Unknown";
-  } catch (err) {
-    console.error(err);
-    document.getElementById("quote-text").innerText = "Could not load quote.";
-  }
-}
-</script>
-
-<!-- // function fetchRandomQuote() {
-//     fetch('')
-//         .then(response => response.json())
-//         .then(data => {
-//             const quote = data.content;
-//             document.getElementById("quote").textContent = quote;
-//         })
-//         .catch(error => {
-//             console.error('Error fetching quote:', error);
-//         });
-// }
-
-
-// document.getElementById("new-quote").addEventListener("click", fetchRandomQuote);
-
-// fetchRandomQuote();
-
-// fetch('http://api.forismatic.com/api/1.0/') // Replace with your API endpoint
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! status: ${response.status}`);
-//     }
-//     return response.json(); // Or response.text() for plain text
-//   })
-//   .then(data => {
-//     console.log(data); // Process the received data
-//   })
-//   .catch(error => {
-//     console.error('Error making API call:', error);
-//   });
-// // </script>
-// <script>
-// async function getApiData() {
-//   try {
-//         const response = await fetch('http://api.forismatic.com/api/1.0/.'); // Replace with your API endpoint
-//         if (!response.ok) throw new Error(`Error: ${response.status}`);
-//         const data = await response.json();
-
-//         document.getElementById('result').innerHTML = JSON.stringify(data, null, 2);
-//         console.log('API Data:', data);
-//       } catch (error) {
-//         console.error('Fetch failed:', error);
-//         document.getElementById('result').innerHTML = 'Error fetching data.';
-//       }
-
-//     }
-
-
-// getApiData();
-
-// document.getElementById('fetchButton').addEventListener('click', getApiData);
-// </script>
-<!-- Post:
-method=getQuote&key=457653&format=xml&lang=en
-
-response:
-<forismatic>
-<quote>
-<quoteText>Brevity — the soul of wit</quoteText>
-<quoteAuthor></quoteAuthor>
-<senderName>name or nickname of the quote sender</senderName>
-<senderLink>http://api.forismatic.com/api/1.0/</senderLink>
-</quote>
-</forismatic> -->
 
 
 
-
-<!-- <style>
-    body {
-    text-align: center;
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-}
-
-h1 {
-    color: #333;
-}
-
-#quote {
-    font-size: 1.2rem;
-    margin: 20px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-#new-quote {
-    background-color: #007BFF;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#new-quote:hover {
-    background-color: #0056b3;}
-</style>
-
-</body>
-</html> --> -->
