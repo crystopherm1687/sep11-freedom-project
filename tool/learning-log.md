@@ -62,13 +62,20 @@ const url = "https://api.allorigins.win/raw?url=" +
 ```
 * Next I have see how i would use this with a button once i fully understand the concepts so that the quotes can show in an orderly way without much interruption from other sources like an error.
 
-### 12/8/25
+### 12/14/25
+* More functions have to be made so the Api works or else nothing else would show. For that i decided to make sure that the API would call it's server for that info.
+```
+const callbackName = "forismaticCallback_" + Math.random().toString(36).substring(2);
+otherFunctions... code here
 
-* text
+const script = document.createElement("script");
+    script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
+    document.body.appendChild(script);
+```
+* With this process ready I can move on to make sure the quotes show with the proper stuff but i will start simple first.
+* I also made sure to include the button that would make the quote appear on your screen. Here is how that looks `fetchdata();
+document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);`.
 
-* text
-
-* text
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
