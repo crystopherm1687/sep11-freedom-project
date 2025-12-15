@@ -61,6 +61,14 @@ const url = "https://api.allorigins.win/raw?url=" +
         document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
 ```
 * Next I have see how i would use this with a button once i fully understand the concepts so that the quotes can show in an orderly way without much interruption from other sources like an error.
+
+### 12/8/25
+
+* text
+
+* text
+
+* text
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
