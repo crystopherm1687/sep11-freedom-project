@@ -3,7 +3,7 @@
 
 ### Content<!--Evidence of learning from the logs for our tool. Keep in mind that our work looks slighty different from the first blog amd so it has to be explained and broken down in detail.-->
 
-During my time learning more about my tool and doing my project I found that in order for my tool to completely work I had to work around the constraints of JSON and and use JSONP since I was putting my time into the forismatic website which was a good server to test my JSON tool. When I was doing more research on the JSONP part of my tool I could use it because this site was like an older version of modern servers so I had to change some things with calling the site for quotes. At this point I found it was useful to obtain the quotes JSON couldn't
+During my time learning more about my tool and doing my project I found that in order for my tool to completely work I had to work around the constraints of JSON and and use JSONP since I was putting my time into the forismatic website which was a good server to test my JSON tool. When I was doing more research on the JSONP part of my tool I could use it because this site was like an older version of modern servers so I had to change some things with calling the site for quotes. At this point I found that it was more useful to obtain the quotes JSON couldn't because of inconsisties. The current code that I made so far utilizes a callback function with different elements associated with helping it to retrieve quotes from a server that is an older model
 
 
 ```
@@ -26,7 +26,7 @@ function fetchdata() {
 
 ```
 
-### Sources<!---use [text](link.com/net/org/gov)->
+### Sources 
 * [Jsonp video](https://www.youtube.com/watch?v=EKaic2TjMAM&t=562s)
 * [learning about JsonP](https://beeceptor.com/docs/concepts/jsonp-introduction/)
 ### EDP<!--What step of engineer design process are you at-->
