@@ -28,17 +28,19 @@ function fetchdata() {
 Now here is what that looks like so far.
 * <img src= "../tool/json.jpg"> <p>First quote</p>
 * <img src="../tool/json2.jpg"> <p>Second quote</p>
+While I finally breath a sign of relief I can most definitely say that I did a lot testing and research in order to have my tool work because it just seemed like a difficult obstacle but I endured it and just wanted to see an end product but for now I have to continue working on improving it and inputting certain elements to make it look nicer.
 ### Sources
 * [Jsonp video](https://www.youtube.com/watch?v=EKaic2TjMAM&t=562s)
 * [learning about JsonP](https://beeceptor.com/docs/concepts/jsonp-introduction/)
 ### EDP<!--What step of engineer design process are you at-->
-The step of the Engineering design process I am at now is the fifth stage because I wanted to have my ideas out there first so I came out with the best amount
+The step of the Engineering design process I am at now is the fifth stage because I wanted to test the idea of using a similar form of JSON now that I discovered it was going to be used but with some aspects of JSON still in it since that is what tool is. On top of that since I'm still testing the product I will have to add some more elements that would make the loading and quote production more smoother.
 ### Skills<!--Specific things to do or need to do-->
 
 * Problem Solving
+As I was learning my tool I came up with ways to get to the end which involved JSONP to intergrate my tool into my project as it produced quotes.
 
 * Attention to detail
-
+Since I 
 
 
 [Previous](entry01.md) | [Next](entry03.md)
