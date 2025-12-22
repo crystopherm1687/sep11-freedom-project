@@ -26,8 +26,8 @@ function fetchdata() {
 
 ```
 Now here is what that looks like so far.
-* <img src= "../tool/json.jpg"> First quote
-* <img src="../tool/json2.jpg"> Second quote
+* <img src= "../tool/json.jpg"> <p>First quote</p>
+* <img src="../tool/json2.jpg"> <p>Second quote</p>
 ### Sources
 * [Jsonp video](https://www.youtube.com/watch?v=EKaic2TjMAM&t=562s)
 * [learning about JsonP](https://beeceptor.com/docs/concepts/jsonp-introduction/)
