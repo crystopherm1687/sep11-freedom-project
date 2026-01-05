@@ -1,77 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Random quote generator</title>
 
 
-<button id="newQuoteBtn">Get New Quote</button>
-<script>
-const URL = "http://api.forismatic.com/api/1.0/";
 
 
+<div class="card" id="card">
+    <div class="spinner" id="spinner"></div>
 
-async function fetchdata() {
-  const response = await fetch(URL)
-  const data = await response.json();
-  console.log(data);
+    <div id="content" style="display:none;">
+        <div id="quote"></div>
+        <div id="author"></div>
+        <button id="newQuoteBtn">New Quote</button>
+    </div>
+</div>
 
-}
 
-fetchdata();
-document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
-console.log("End of code")
-</script>
-<!-- change -->
-<html>
-    <forismatic>
-<quote>
-<quoteText>Brevity — the soul of wit</quoteText>
-<quoteAuthor></quoteAuthor>
-<senderName>name or nickname of the quote sender</senderName>
-<senderLink>email or website address of the quote sender</senderLink>
-</quote>
-</forismatic>
-</html>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      text-align: center;
-      padding: 40px;
-    }
-
-    #quote-box {
-      background: white;
-      padding: 25px;
-      margin: auto;
-      width: 70%;
-      max-width: 700px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    #quote-text {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-    }
-
-    #quote-author {
-      font-size: 1.1rem;
-      color: #555;
-    }
-
-    button {
-      margin-top: 25px;
-      padding: 12px 20px;
-      font-size: 1rem;
-      border: none;
-      background: #007bff;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-  </style>
+</style>
 </head>
 <body>
+<script>
+// ===============================
+//      FORISMATIC JSONP CALL
+// ===============================
+function fetchdata() {
+    showLoading();
 
+    const callbackName = "forismaticCallback_" + Math.random().toString(36).substring(2);
+
+    window[callbackName] = function(data) {
+        document.getElementById("quote").textContent = "“" + data.quoteText.trim() + "”";
+        document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
+
+        hideLoading();
+
+        delete window[callbackName];
+        script.remove();
+    };
+
+    const script = document.createElement("script");
+    script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
+    document.body.appendChild(script);
+}
+
+// ===============================
+//           LOADING STATES
+// ===============================
+function showLoading() {
+    document.getElementById("spinner").style.display = "block";
+    document.getElementById("content").style.display = "none";
+}
+
+function hideLoading() {
+    setTimeout(() => {
+        document.getElementById("spinner").style.display = "none";
+        document.getElementById("content").style.display = "block";
+
+        const card = document.getElementById("card");
+        card.classList.remove("show");
+        void card.offsetWidth; // restart animation
+        card.classList.add("show");
+
+    }, 700); // adds smoothness
+}
+
+// ===============================
+//       INITIAL CALL + BUTTON
+// ===============================
+fetchdata();
+document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
+
+</script>
+
+</body>
+</html>
