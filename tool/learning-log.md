@@ -76,6 +76,23 @@ const script = document.createElement("script");
 * I also made sure to include the button that would make the quote appear on your screen. Here is how that looks `fetchdata();
 document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);`.
 
+### 1/16/26
+* For now since the loading feels off i decided to make a function for that purpose and make it seem more professional.
+```
+function showLoading() {
+    document.getElementById("spinner").style.display = "block";
+    document.getElementById("content").style.display = "none";
+}
+```
+*  Also I made sure to add other effect for the loading so that it is looks better when it loads.
+```
+function hideLoading() {
+    setTimeout(() => {
+        document.getElementById("spinner").style.display = "none";
+        document.getElementById("content").style.display = "block";
+
+```
+* For the next time there needs to be progress on showing those quotes appear one at a time unlesss the button is pressed on the middle of the screen.
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
