@@ -93,6 +93,9 @@ function hideLoading() {
 
 ```
 * For the next time there needs to be progress on showing those quotes appear one at a time unlesss the button is pressed on the middle of the screen.
+
+
+
 <!--
 * Links you used today (websites, videos, etc)
 * Things you tried, progress you made, etc
