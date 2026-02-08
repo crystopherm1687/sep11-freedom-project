@@ -1,159 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Random quote generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-    body {
-        font-family: "Inter", sans-serif;
-        background: linear-gradient(135deg, #4b6cb7, #182848);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        color: #fff;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    .card {
-        width: 420px;
-        background: rgba(255, 255, 255, 0.12);
-        padding: 30px;
-        border-radius: 16px;
-        backdrop-filter: blur(12px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity .6s ease, transform .6s ease;
-    }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
 
-    .card.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
+        .card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    #quote {
-        font-size: 1.3rem;
-        margin-bottom: 15px;
-        line-height: 1.6;
-    }
+        /* Spinner */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
 
-    #author {
-        font-size: 1rem;
-        opacity: 0.8;
-        text-align: right;
-        margin-bottom: 20px;
-    }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-    button {
-        width: 100%;
-        padding: 12px 18px;
-        border: none;
-        border-radius: 10px;
-        background: #ffd369;
-        font-size: 1.05rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: transform .15s ease, box-shadow .15s ease;
-    }
+        #content {
+            text-align: center;
+            width: 100%;
+        }
 
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    }
+        #quote {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
 
-    button:active {
-        transform: translateY(0);
-        box-shadow: none;
-    }
+        #author {
+            font-size: 1.1rem;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
 
-    /* Spinner */
-    .spinner {
-        border: 4px solid rgba(255,255,255,0.2);
-        border-top: 4px solid #ffd369;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        animation: spin 0.8s linear infinite;
-        margin: auto;
-        display: none;
-    }
+        #author::before {
+            content: "— ";
+        }
 
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-</style>
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
+    <div class="card" id="card">
+        <div class="spinner" id="spinner"></div>
 
-<div class="card" id="card">
-    <div class="spinner" id="spinner"></div>
-
-    <div id="content" style="display:none;">
-        <div id="quote"></div>
-        <div id="author"></div>
-        <button id="newQuoteBtn">New Quote</button>
+        <div id="content" style="display:none;">
+            <div id="quote" role="text" aria-live="polite"></div>
+            <div id="author" role="text"></div>
+            <div id="error" class="error" style="display:none;"></div>
+            <button id="newQuoteBtn" aria-label="Get new quote">New Quote</button>
+        </div>
     </div>
-</div>
 
-<script>
-// ===============================
-//      FORISMATIC JSONP CALL
-// ===============================
-function fetchdata() {
-    showLoading();
+    <script>
+        // ===============================
+        //      FORISMATIC JSONP CALL
+        // ===============================
+        function fetchdata() {
+            showLoading();
 
-    const callbackName = "forismaticCallback_" + Math.random().toString(36).substring(2);
+            const callbackName = "forismaticCallback_" + Math.random().toString(36).substring(2);
+            let timeoutId;
 
-    window[callbackName] = function(data) {
-        document.getElementById("quote").textContent = "“" + data.quoteText.trim() + "”";
-        document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
+            // Cleanup function
+            const cleanup = (script) => {
+                clearTimeout(timeoutId);
+                delete window[callbackName];
+                if (script && script.parentNode) {
+                    script.remove();
+                }
+            };
 
-        hideLoading();
+            // Success callback
+            window[callbackName] = function(data) {
+                if (data && data.quoteText) {
+                    document.getElementById("quote").textContent = """ + data.quoteText.trim() + """;
+                    document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
+                    document.getElementById("error").style.display = "none";
+                    hideLoading();
+                } else {
+                    showError("Invalid quote data received");
+                }
+                cleanup(script);
+            };
 
-        delete window[callbackName];
-        script.remove();
-    };
+            // Create and append script
+            const script = document.createElement("script");
+            script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
 
-    const script = document.createElement("script");
-    script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
-    document.body.appendChild(script);
-}
+            // Error handling
+            script.onerror = function() {
+                showError("Failed to load quote. Please try again.");
+                cleanup(script);
+            };
 
-// ===============================
-//           LOADING STATES
-// ===============================
-function showLoading() {
-    document.getElementById("spinner").style.display = "block";
-    document.getElementById("content").style.display = "none";
-}
+            // Timeout handling (10 seconds)
+            timeoutId = setTimeout(() => {
+                showError("Request timed out. Please try again.");
+                cleanup(script);
+            }, 10000);
 
-function hideLoading() {
-    setTimeout(() => {
-        document.getElementById("spinner").style.display = "none";
-        document.getElementById("content").style.display = "block";
+            document.body.appendChild(script);
+        }
 
-        const card = document.getElementById("card");
-        card.classList.remove("show");
-        void card.offsetWidth; // restart animation
-        card.classList.add("show");
+        // ===============================
+        //           LOADING STATES
+        // ===============================
+        function showLoading() {
+            document.getElementById("spinner").style.display = "block";
+            document.getElementById("content").style.display = "none";
+            document.getElementById("newQuoteBtn").disabled = true;
+        }
 
-    }, 700); // adds smoothness
-}
+        function hideLoading() {
+            setTimeout(() => {
+                document.getElementById("spinner").style.display = "none";
+                document.getElementById("content").style.display = "block";
+                document.getElementById("newQuoteBtn").disabled = false;
 
-// ===============================
-//       INITIAL CALL + BUTTON
-// ===============================
-fetchdata();
-document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
+                const card = document.getElementById("card");
+                card.classList.remove("show");
+                void card.offsetWidth; // Force reflow to restart animation
+                card.classList.add("show");
+            }, 700);
+        }
 
-</script>
+        function showError(message) {
+            const errorEl = document.getElementById("error");
+            errorEl.textContent = message;
+            errorEl.style.display = "block";
+            document.getElementById("spinner").style.display = "none";
+            document.getElementById("content").style.display = "block";
+            document.getElementById("newQuoteBtn").disabled = false;
+        }
 
+        // ===============================
+        //       INITIAL CALL + BUTTON
+        // ===============================
+        fetchdata();
+        document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
+    </script>
 </body>
 </html>
-
-
-
-
