@@ -4,7 +4,7 @@
 
 ### Content
 
-For the main part of my project I have been consistenly checking where the progress on my code is so far and found that the code does function properly but I just need to add the extra elements that would make it stand it.
+For the main part of my project I have been consistenly checking where the progress on my code is so far and found that the code does function properly but I just need to add the extra elements that would make it stand out.
 
 
 <img src = "../tool/image,jpg">
