@@ -1,7 +1,7 @@
 # Plan
 
-## Tool: 
-## Product: 
+## Tool: JSON API
+## Product: Random quote generator
 
 ---
 
@@ -9,13 +9,16 @@
 
 #### MVP
 
-- [ ] Task (deadline: X)
-  - [ ] Subtask (deadline: X)
+- [ Start building up my quote generator from a random button and a few words] Task (deadline: 3/23)
+  - [ Make it easier to use the button once clicked and pressed] Subtask (deadline: 4/1)
+- [Intergrate all the parts from previous work together] Task (deadline: 4/20)
+  - [Complete loading of the screens and change in quotes, removable elements that get rid of quote space and calls, and functions that call quotes and request them.] Subtask (deadline 4/23)
 
 #### Beyond MVP
 
-- [ ] Task
-  - [ ] Subtask
+- [ Add quote history] Task
+  - [ Change the theme color of my project] Subtask
+- [add some animations and small details.] Task
 
 
 <!-- EXAMPLE
@@ -49,7 +52,7 @@
 
 <!-- DO NOT USE THIS YET
 
-#### Peer Feedback 
+#### Peer Feedback
 
 | Name | Glows | Grows |
 | -------- | ------- | ------- |
