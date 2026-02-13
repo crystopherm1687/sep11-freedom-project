@@ -150,7 +150,7 @@
             // Success callback
             window[callbackName] = function(data) {
                 if (data && data.quoteText) {
-                    document.getElementById("quote").textContent = """ + data.quoteText.trim() + """;
+                    document.getElementById("quote").textContent = "" + data.quoteText.trim() + "";
                     document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
                     document.getElementById("error").style.display = "none";
                     hideLoading();
