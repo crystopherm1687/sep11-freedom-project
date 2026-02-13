@@ -12,7 +12,12 @@
 - [ Start building up my quote generator from a random button and a few words] Task (deadline: 3/23)
   - [ Make it easier to use the button once clicked and pressed] Subtask (deadline: 4/1)
 - [Intergrate all the parts from previous work together] Task (deadline: 4/20)
-  - [Complete loading of the screens and change in quotes, removable elements that get rid of quote space and calls, and functions that call quotes and request them.] Subtask (deadline 4/23)
+  - [Complete loading of the screens and change in
+  quotes]
+  - [removable elements that get rid of quote space and
+  calls]
+  - [functions that call quotes and request them.]
+  Subtask (deadline 4/23)
 
 #### Beyond MVP
 
