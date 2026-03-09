@@ -94,7 +94,32 @@ function hideLoading() {
 ```
 * For the next time there needs to be progress on showing those quotes appear one at a time unlesss the button is pressed on the middle of the screen.
 
-
+### 3/8/26
+* Even still I can find small details I can add to make the page feel a bit more relevant so I made a copy function so users could copy an interesting quote without doing it manually and is much more efficent.
+```
+//html
+<button id="copyBtn" aria-label="Copy quote" title="Copy to clipboard">Copy</button>
+//js
+document.getElementById("copyBtn").addEventListener("click", () => {
+    const quote = document.getElementById("quote").textContent;
+    const author = document.getElementById("author").textContent;
+    navigator.clipboard.writeText(`"${quote}" ${author}`).then(() => {
+        const btn = document.getElementById("copyBtn");
+        btn.textContent = "Copied!";
+        setTimeout(() => btn.textContent = "Copy", 2000);
+    });
+});
+```
+* Also decided to add an element to move forward to a new quote like `.addEventListener` so users could go through quotes faster. In this case only the space and right arrow move forward.
+```
+document.addEventListener("keydown", (e) => {
+    const btn = document.getElementById("newQuoteBtn");
+    if ((e.code === "Space" || e.code === "ArrowRight") && !btn.disabled) {
+        e.preventDefault();
+        fetchdata();
+    }
+});
+```
 
 <!--
 * Links you used today (websites, videos, etc)
