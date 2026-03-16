@@ -1,7 +1,45 @@
 # Entry 4
-##### X/X/XX
+##### 3/15/26
 
-Text
+### Content  <!--Progress towards MVP, explain it, what else have you learned/evidence -->
+For my tool I focused on building small things that would make it feel a bit more noticeable but I kept the same functions in play so everything would run together smoothly. Right now the MVP includes all the basic stuff like obtaining quotes
+
+```
+//html
+<button id="copyBtn" aria-label="Copy quote" title="Copy to clipboard">Copy</button>
+//js
+document.getElementById("copyBtn").addEventListener("click", () => {
+    const quote = document.getElementById("quote").textContent;
+    const author = document.getElementById("author").textContent;
+    navigator.clipboard.writeText(`"${quote}" ${author}`).then(() => {
+        const btn = document.getElementById("copyBtn");
+        btn.textContent = "Copied!";
+        setTimeout(() => btn.textContent = "Copy", 2000);
+    });
+});
+```
+Another idea i used was
+```
+document.addEventListener("keydown", (e) => {
+    const btn = document.getElementById("newQuoteBtn");
+    if ((e.code === "Space" || e.code === "ArrowRight") && !btn.disabled) {
+        e.preventDefault();
+        fetchdata();
+    }
+});
+```
+### Sources
+For my sources I looked at sites that would help develop my site even more so i used small details that would help me improve the functions further and that was done through [clipboard site](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) which helped me build a copy function and [FCC](freecodecamp.org) which helped me decide what elements I wanted to have so the user could move to a new quote using their keys.
+### EDP
+The current of the engineering design process that I am in right now is the 7th stage or improving the prototype because I feel that I am closer to being finished with my tool and adding small details to it will the user feel much more comfortable using it. For my project I am using a different shade of colors so the users can blend themselves into my tool and overall feel very experiencied at getting quotes.
+
+### Skills
+
+* text
+
+* text
+
+
 
 [Previous](entry03.md) | [Next](entry05.md)
 
