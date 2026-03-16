@@ -35,9 +35,9 @@ The current of the engineering design process that I am in right now is the 7th 
 
 ### Skills
 
-* text
+* Time management: For this skill I realized that I need to work on setting 
 
-* text
+* Adaptability:
 
 
 
