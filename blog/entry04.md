@@ -2,7 +2,7 @@
 ##### 3/15/26
 
 ### Content  <!--Progress towards MVP, explain it, what else have you learned/evidence -->
-For my tool I focused on building small things that would make it feel a bit more noticeable but I kept the same functions in play so everything would run together smoothly. Right now the MVP includes all the basic stuff like obtaining quotes
+For my tool I focused on building small things that would make it feel a bit more noticeable but I kept the same functions in play so everything would run together smoothly. Right now the MVP includes all the basic stuff like obtaining quotes and some organization but i still need to work om adding the best color scheme for me and putting on the rest of the good elements after I have deicded where to put them. Despite this I have made good progress and am expected to finsih on time just as my schedule says. Below I have made something that would allow the user to copy the quote they liked and input where ever they wanted to so that they didn't have to manually do it.
 
 ```
 //html
@@ -18,7 +18,7 @@ document.getElementById("copyBtn").addEventListener("click", () => {
     });
 });
 ```
-Another idea i used was
+Another idea I had was to make the quotes much more accesible through key presses and so that the user could cycle through them much quicker and not spend as much time clicking for a good quote.
 ```
 document.addEventListener("keydown", (e) => {
     const btn = document.getElementById("newQuoteBtn");
