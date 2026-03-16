@@ -2,7 +2,7 @@
 ##### 3/15/26
 
 ### Content  <!--Progress towards MVP, explain it, what else have you learned/evidence -->
-For my tool I focused on building small things that would make it feel a bit more noticeable but I kept the same functions in play so everything would run together smoothly. Right now the MVP includes all the basic stuff like obtaining quotes and some organization but i still need to work om adding the best color scheme for me and putting on the rest of the good elements after I have deicded where to put them. Despite this I have made good progress and am expected to finsih on time just as my schedule says. Below I have made something that would allow the user to copy the quote they liked and input where ever they wanted to so that they didn't have to manually do it.
+For my tool I focused on building small things that would make it feel a bit more noticeable but I kept the same functions in play so everything would run together smoothly. Right now the MVP includes all the basic stuff like obtaining quotes and some organization but i still need to work om adding the best color scheme for me and putting on the rest of the good elements after I have decided where to put them. Despite this I have made good progress and am expected to finsih on time just as my MVP schedule says. Below I have made something that would allow the user to copy the quote they liked and input where ever they wanted to so that they didn't have to manually do it. It uses event listeners through a button the user presses and intergrates details from a site I researched that could help me with this specific function.
 
 ```
 //html
