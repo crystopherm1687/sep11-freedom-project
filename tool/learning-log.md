@@ -120,6 +120,36 @@ document.addEventListener("keydown", (e) => {
     }
 });
 ```
+### 3/22/26
+* For quotes to start showing the one that is mentioned for the day i came up with new code using some past concepts and applied them together into one part so that the quote would show.
+```
+const script = document.createElement("script");
+    script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
+    script.onerror = () => {
+        inner.innerHTML = `<p style="color:#c0624a;font-size:0.85rem;">Failed to load.</p>`;
+        cleanup(script);
+    };
+    timeoutId = setTimeout(() => {
+        inner.innerHTML = `<p style="color:#c0624a;font-size:0.85rem;">Request timed out.</p>`;
+        cleanup(script);
+    }, 10000);
+    document.body.appendChild(script);
+```
+* Also decided to make a new function just so the daily quote would show as a different thing just so that users can observe both quotes without having to switch pages or see an error when wanting too look at both.
+```
+function renderQotd({ text, author }) {
+    document.getElementById("qotd-inner").innerHTML =
+        `<div id="qotd-quote">${text}</div><div id="qotd-author">${author}</div>`;
+}
+
+document.getElementById("qotd-bar").addEventListener("click", toggleQotd);
+document.getElementById("qotd-bar").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleQotd(); }
+});
+document.getElementById("qotdCloseBtn").addEventListener("click", closeQotd);
+```
+3/23/26
+* 
 
 <!--
 * Links you used today (websites, videos, etc)

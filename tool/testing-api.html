@@ -1,78 +1,484 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Random quote generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1a1714;
+            --surface: #211e1a;
+            --border: #2e2a25;
+            --accent: #c9963a;
+            --accent-dim: rgba(201, 150, 58, 0.12);
+            --text-primary: #ede8e0;
+            --text-secondary: #8a8278;
+            --text-muted: #504c47;
+        }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
 
+        /* Grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.35;
+        }
 
-<div class="card" id="card">
-    <div class="spinner" id="spinner"></div>
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 640px;
+        }
 
-    <div id="content" style="display:none;">
-        <div id="quote"></div>
-        <div id="author"></div>
-        <button id="newQuoteBtn">New Quote</button>
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 56px 52px 48px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Decorative quote mark */
+        .card::before {
+            content: '\201C';
+            font-family: 'Playfair Display', serif;
+            font-size: 9rem;
+            line-height: 1;
+            color: var(--accent);
+            opacity: 0.18;
+            position: absolute;
+            top: 8px;
+            left: 36px;
+            pointer-events: none;
+        }
+
+        /* Accent line */
+        .accent-line {
+            width: 32px;
+            height: 2px;
+            background: var(--accent);
+            margin-bottom: 32px;
+        }
+
+        /* Spinner */
+        .spinner-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 160px;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #content { display: none; }
+
+        #quote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.45rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin-bottom: 28px;
+            letter-spacing: 0.01em;
+        }
+
+        #author {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        #author::before {
+            content: "— ";
+            opacity: 0.5;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        button {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 10px 24px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
+        }
+
+        button:hover:not(:disabled) {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        button:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: #c0624a;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Footer label */
+        .footer-label {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        /* ── Quote of the Day banner ── */
+#qotd-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.qotd-pill {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    opacity: 0.85;
+}
+
+.qotd-date {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+}
+
+#qotd-panel {
+    display: none;
+    margin-bottom: 16px;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 28px 32px 24px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#qotd-panel.open  { display: block; }
+#qotd-panel.visible { opacity: 1; transform: translateY(0); }
+
+.qotd-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.qotd-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.qotd-close:hover:not(:disabled) {
+    color: var(--text-secondary);
+    border-color: transparent;
+    background: transparent;
+}
+
+#qotd-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+#qotd-author {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+#qotd-author::before { content: "— "; opacity: 0.5; }
+
+.qotd-spinner {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="card" id="card">
+            <div class="spinner-wrap" id="spinner">
+                <div class="spinner"></div>
+            </div>
+            <div id="content">
+                <div class="accent-line"></div>
+                <div id="quote" role="text" aria-live="polite"></div>
+                <div id="author" role="text"></div>
+                <div id="error" class="error"></div>
+                <div class="btn-row">
+                    <button id="newQuoteBtn" aria-label="Get new quote">Next Quote</button>
+                </div>
+            </div>
+        </div>
+        <p class="footer-label">Daily Wisdom</p>
+        <button id="copyBtn" aria-label="Copy quote" title="Copy to clipboard">Copy Quote</button>
+        <!-- Quote of the Day -->
+<div id="qotd-panel" role="region" aria-label="Quote of the day">
+    <div class="qotd-label">
+        <span>Quote of the Day</span>
+        <button class="qotd-close" id="qotdCloseBtn" aria-label="Close">✕</button>
+    </div>
+    <div id="qotd-inner">
+        <div class="qotd-spinner"><div class="spinner"></div></div>
     </div>
 </div>
 
+<div id="qotd-bar" role="button" tabindex="0" aria-label="Show quote of the day">
+    <span class="qotd-pill">Quote of the Day</span>
+    <span class="qotd-date" id="qotd-date"></span>
+</div>
+    </div>
 
-</style>
-</head>
-<body>
-<script>
-// ===============================
-//      FORISMATIC JSONP CALL
-// ===============================
-function fetchdata() {
-    showLoading();
+    <script>
+        function fetchdata() {
+            showLoading();
+            const callbackName = "forismaticCallback_" + Math.random().toString(36).substring(2);
+            let timeoutId;
+            const cleanup = (script) => {
+                clearTimeout(timeoutId);
+                delete window[callbackName];
+                if (script && script.parentNode) script.remove();
+            };
+            window[callbackName] = function(data) {
+                if (data && data.quoteText) {
+                    document.getElementById("quote").textContent = data.quoteText.trim();
+                    document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
+                    document.getElementById("error").style.display = "none";
+                    hideLoading();
+                } else {
+                    showError("Invalid quote data received");
+                }
+                cleanup(script);
+            };
+            const script = document.createElement("script");
+            script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
+            script.onerror = () => { showError("Failed to load quote. Please try again."); cleanup(script); };
+            timeoutId = setTimeout(() => { showError("Request timed out. Please try again."); cleanup(script); }, 10000);
+            document.body.appendChild(script);
+        }
 
-    const callbackName = "forismaticCallback_" + Math.random().toString(36).substring(2);
+        function showLoading() {
+            document.getElementById("spinner").style.display = "flex";
+            document.getElementById("content").style.display = "none";
+            document.getElementById("newQuoteBtn").disabled = true;
+        }
+
+        function hideLoading() {
+            setTimeout(() => {
+                document.getElementById("spinner").style.display = "none";
+                document.getElementById("content").style.display = "block";
+                document.getElementById("newQuoteBtn").disabled = false;
+                const card = document.getElementById("card");
+                card.classList.remove("show");
+                void card.offsetWidth;
+                card.classList.add("show");
+            }, 700);
+        }
+
+        function showError(msg) {
+            const err = document.getElementById("error");
+            err.textContent = msg;
+            err.style.display = "block";
+            document.getElementById("spinner").style.display = "none";
+            document.getElementById("content").style.display = "block";
+            document.getElementById("newQuoteBtn").disabled = false;
+        }
+        document.getElementById("copyBtn").addEventListener("click", () => {
+    const quote = document.getElementById("quote").textContent;
+    const author = document.getElementById("author").textContent;
+    navigator.clipboard.writeText(`"${quote}" ${author}`).then(() => {
+        const btn = document.getElementById("copyBtn");
+        btn.textContent = "Copied!";
+        setTimeout(() => btn.textContent = "Copy", 2000);
+    });
+});
+
+document.addEventListener("keydown", (e) => {
+    const btn = document.getElementById("newQuoteBtn");
+    if ((e.code === "Space" || e.code === "ArrowRight") && !btn.disabled) {
+        e.preventDefault();
+        fetchdata();
+    }
+});
+
+
+        fetchdata();
+        document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
+// ── Quote of the Day ──
+function todayKey() {
+    const d = new Date();
+    return `qotd_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
+}
+
+function formatDate() {
+    return new Date().toLocaleDateString("en-US", {
+        weekday: "long", month: "long", day: "numeric"
+    });
+}
+
+document.getElementById("qotd-date").textContent = formatDate();
+
+function openQotd() {
+    const panel = document.getElementById("qotd-panel");
+    panel.classList.add("open");
+    requestAnimationFrame(() => panel.classList.add("visible"));
+    loadQotd();
+}
+
+function closeQotd() {
+    const panel = document.getElementById("qotd-panel");
+    panel.classList.remove("visible");
+    setTimeout(() => panel.classList.remove("open"), 400);
+}
+
+function toggleQotd() {
+    const panel = document.getElementById("qotd-panel");
+    if (panel.classList.contains("open")) { closeQotd(); } else { openQotd(); }
+}
+
+function loadQotd() {
+    const key = todayKey();
+    const cached = localStorage.getItem(key);
+    if (cached) { renderQotd(JSON.parse(cached)); return; }
+
+    // Nothing saved yet — fetch a fresh quote for today
+    const inner = document.getElementById("qotd-inner");
+    inner.innerHTML = `<div class="qotd-spinner"><div class="spinner"></div></div>`;
+
+    const callbackName = "qotdCallback_" + Math.random().toString(36).substring(2);
+    let timeoutId;
+    const cleanup = (script) => {
+        clearTimeout(timeoutId);
+        delete window[callbackName];
+        if (script && script.parentNode) script.remove();
+    };
 
     window[callbackName] = function(data) {
-        document.getElementById("quote").textContent = "“" + data.quoteText.trim() + "”";
-        document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
-
-        hideLoading();
-
-        delete window[callbackName];
-        script.remove();
+        if (data && data.quoteText) {
+            const qotd = {
+                text: data.quoteText.trim(),
+                author: data.quoteAuthor ? data.quoteAuthor.trim() : "Unknown"
+            };
+            localStorage.setItem(key, JSON.stringify(qotd)); // save for the day
+            renderQotd(qotd);
+        } else {
+            inner.innerHTML = `<p style="color:#c0624a;font-size:0.85rem;">Could not load today's quote.</p>`;
+        }
+        cleanup(script);
     };
 
     const script = document.createElement("script");
     script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
+    script.onerror = () => {
+        inner.innerHTML = `<p style="color:#c0624a;font-size:0.85rem;">Failed to load.</p>`;
+        cleanup(script);
+    };
+    timeoutId = setTimeout(() => {
+        inner.innerHTML = `<p style="color:#c0624a;font-size:0.85rem;">Request timed out.</p>`;
+        cleanup(script);
+    }, 10000);
     document.body.appendChild(script);
 }
 
-// ===============================
-//           LOADING STATES
-// ===============================
-function showLoading() {
-    document.getElementById("spinner").style.display = "block";
-    document.getElementById("content").style.display = "none";
+function renderQotd({ text, author }) {
+    document.getElementById("qotd-inner").innerHTML =
+        `<div id="qotd-quote">${text}</div><div id="qotd-author">${author}</div>`;
 }
 
-function hideLoading() {
-    setTimeout(() => {
-        document.getElementById("spinner").style.display = "none";
-        document.getElementById("content").style.display = "block";
-
-        const card = document.getElementById("card");
-        card.classList.remove("show");
-        void card.offsetWidth; // restart animation
-        card.classList.add("show");
-
-    }, 700); // adds smoothness
-}
-
-// ===============================
-//       INITIAL CALL + BUTTON
-// ===============================
-fetchdata();
-document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
-
-</script>
-
+document.getElementById("qotd-bar").addEventListener("click", toggleQotd);
+document.getElementById("qotd-bar").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleQotd(); }
+});
+document.getElementById("qotdCloseBtn").addEventListener("click", closeQotd);
+    </script>
 </body>
 </html>
