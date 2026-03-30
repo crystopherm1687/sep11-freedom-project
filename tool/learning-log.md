@@ -148,8 +148,28 @@ document.getElementById("qotd-bar").addEventListener("keydown", (e) => {
 });
 document.getElementById("qotdCloseBtn").addEventListener("click", closeQotd);
 ```
-3/23/26
-* 
+3/27/26
+* For my project i also decided to add a date function so that users know what day it is even if they don't want to look at their calender.
+```
+    function todayKey() {
+      const d = new Date();
+      return `qotd_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}_${categorySelect.value}`;
+    }
+    function formatDate() {
+      return new Date().toLocaleDateString("en-US", {
+        weekday: "long", month: "long", day: "numeric"
+      });
+    }
+```
+* I also made sure to add a catgories tab for users to access their favorite genres of quotes to feel inspired by their choice of quotes.
+```
+      const filtered = getFilteredQuotes();
+      const q = filtered[Math.floor(Math.random() * filtered.length)] || quotes[0];
+      const qotd = { text: q.text, author: q.author };
+      localStorage.setItem(key, JSON.stringify(qotd));
+      renderQotd(qotd);
+    }
+```
 
 <!--
 * Links you used today (websites, videos, etc)

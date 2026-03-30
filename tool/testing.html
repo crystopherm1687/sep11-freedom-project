@@ -1,285 +1,482 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Quote Generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #1a1714;
-            --surface: #211e1a;
-            --border: #2e2a25;
-            --accent: #c9963a;
-            --accent-dim: rgba(201, 150, 58, 0.12);
-            --text-primary: #ede8e0;
-            --text-secondary: #8a8278;
-            --text-muted: #504c47;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Quote Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1714;
+      --surface: #211e1a;
+      --border: #2e2a25;
+      --accent: #c9963a;
+      --accent-dim: rgba(201, 150, 58, 0.12);
+      --text-primary: #ede8e0;
+      --text-secondary: #8a8278;
+      --text-muted: #504c47;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background-color: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
 
-        /* Grain overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.35;
-        }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+    }
 
-        .wrapper {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 640px;
-        }
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 640px;
+    }
 
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 56px 52px 48px;
-            position: relative;
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            min-height: 280px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 56px 52px 48px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-        .card.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-        /* Decorative quote mark */
-        .card::before {
-            content: '\201C';
-            font-family: 'Playfair Display', serif;
-            font-size: 9rem;
-            line-height: 1;
-            color: var(--accent);
-            opacity: 0.18;
-            position: absolute;
-            top: 8px;
-            left: 36px;
-            pointer-events: none;
-        }
+    .card::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      font-size: 9rem;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.18;
+      position: absolute;
+      top: 8px;
+      left: 36px;
+      pointer-events: none;
+    }
 
-        /* Accent line */
-        .accent-line {
-            width: 32px;
-            height: 2px;
-            background: var(--accent);
-            margin-bottom: 32px;
-        }
+    .accent-line {
+      width: 32px;
+      height: 2px;
+      background: var(--accent);
+      margin-bottom: 18px;
+    }
 
-        /* Spinner */
-        .spinner-wrap {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 160px;
-        }
+    .spinner-wrap, .qotd-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 160px;
+    }
 
-        .spinner {
-            width: 28px;
-            height: 28px;
-            border: 2px solid var(--border);
-            border-top: 2px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 0.9s linear infinite;
-        }
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--border);
+      border-top: 2px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-        #content { display: none; }
+    #content { display: none; }
 
-        #quote {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.45rem;
-            line-height: 1.7;
-            color: var(--text-primary);
-            margin-bottom: 28px;
-            letter-spacing: 0.01em;
-        }
+    #quote, #qotd-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+    }
 
-        #author {
-            font-size: 0.8rem;
-            color: var(--accent);
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-        }
+    #quote {
+      font-size: 1.45rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
 
-        #author::before {
-            content: "— ";
-            opacity: 0.5;
-        }
+    #author, #qotd-author {
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
 
-        .btn-row {
-            display: flex;
-            justify-content: flex-start;
-        }
+    #author {
+      font-size: 0.8rem;
+      margin-bottom: 18px;
+    }
 
-        button {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            padding: 10px 24px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            border-radius: 2px;
-            cursor: pointer;
-            transition: color 0.2s, border-color 0.2s, background 0.2s;
-        }
+    #author::before, #qotd-author::before { content: "— "; opacity: 0.5; }
 
-        button:hover:not(:disabled) {
-            color: var(--accent);
-            border-color: var(--accent);
-            background: var(--accent-dim);
-        }
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      align-items: center;
+    }
 
-        button:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-        }
+    select {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      border-radius: 2px;
+      outline: none;
+    }
 
-        .error {
-            color: #c0624a;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            display: none;
-        }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-        /* Footer label */
-        .footer-label {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-    </style>
+    button {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 10px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: #c0624a;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .footer-label {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    #qotd-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      width: fit-content;
+    }
+
+    .qotd-pill {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      padding: 3px 8px;
+      white-space: nowrap;
+      opacity: 0.85;
+    }
+
+    .qotd-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    #qotd-panel {
+      display: none;
+      margin-bottom: 16px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 28px 32px 24px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    #qotd-panel.open { display: block; }
+    #qotd-panel.visible { opacity: 1; transform: translateY(0); }
+
+    .qotd-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .qotd-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+
+    #qotd-quote {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    #qotd-author {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="card" id="card">
-            <div class="spinner-wrap" id="spinner">
-                <div class="spinner"></div>
-            </div>
-            <div id="content">
-                <div class="accent-line"></div>
-                <div id="quote" role="text" aria-live="polite"></div>
-                <div id="author" role="text"></div>
-                <div id="error" class="error"></div>
-                <div class="btn-row">
-                    <button id="newQuoteBtn" aria-label="Get new quote">Next Quote</button>
-                </div>
-            </div>
+  <div class="wrapper">
+    <div class="card" id="card">
+      <div class="spinner-wrap" id="spinner">
+        <div class="spinner"></div>
+      </div>
+
+      <div id="content">
+        <div class="accent-line"></div>
+        <div class="meta-row">
+          <select id="categorySelect" aria-label="Filter quotes by category">
+            <option value="all">All Categories</option>
+          </select>
         </div>
-        <p class="footer-label">Daily Wisdom</p>
-        <button id="copyBtn" aria-label="Copy quote" title="Copy to clipboard">Copy Quote</button>
+        <div id="quote" role="text" aria-live="polite"></div>
+        <div id="author" role="text"></div>
+        <div id="error" class="error"></div>
+        <div class="btn-row">
+          <button id="newQuoteBtn" aria-label="Get new quote">Next Quote</button>
+          <button id="copyBtn" aria-label="Copy quote" title="Copy to clipboard">Copy Quote</button>
+        </div>
+      </div>
     </div>
 
-    <script>
-        function fetchdata() {
-            showLoading();
-            const callbackName = "forismaticCallback_" + Math.random().toString(36).substring(2);
-            let timeoutId;
-            const cleanup = (script) => {
-                clearTimeout(timeoutId);
-                delete window[callbackName];
-                if (script && script.parentNode) script.remove();
-            };
-            window[callbackName] = function(data) {
-                if (data && data.quoteText) {
-                    document.getElementById("quote").textContent = data.quoteText.trim();
-                    document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
-                    document.getElementById("error").style.display = "none";
-                    hideLoading();
-                } else {
-                    showError("Invalid quote data received");
-                }
-                cleanup(script);
-            };
-            const script = document.createElement("script");
-            script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
-            script.onerror = () => { showError("Failed to load quote. Please try again."); cleanup(script); };
-            timeoutId = setTimeout(() => { showError("Request timed out. Please try again."); cleanup(script); }, 10000);
-            document.body.appendChild(script);
-        }
+    <p class="footer-label">Daily Wisdom</p>
 
-        function showLoading() {
-            document.getElementById("spinner").style.display = "flex";
-            document.getElementById("content").style.display = "none";
-            document.getElementById("newQuoteBtn").disabled = true;
-        }
+    <div id="qotd-panel" role="region" aria-label="Quote of the day">
+      <div class="qotd-label">
+        <span>Quote of the Day</span>
+        <button class="qotd-close" id="qotdCloseBtn" aria-label="Close">✕</button>
+      </div>
+      <div id="qotd-inner">
+        <div class="qotd-spinner"><div class="spinner"></div></div>
+      </div>
+    </div>
 
-        function hideLoading() {
-            setTimeout(() => {
-                document.getElementById("spinner").style.display = "none";
-                document.getElementById("content").style.display = "block";
-                document.getElementById("newQuoteBtn").disabled = false;
-                const card = document.getElementById("card");
-                card.classList.remove("show");
-                void card.offsetWidth;
-                card.classList.add("show");
-            }, 700);
-        }
+    <div id="qotd-bar" role="button" tabindex="0" aria-label="Show quote of the day">
+      <span class="qotd-pill">Quote of the Day</span>
+      <span class="qotd-date" id="qotd-date"></span>
+    </div>
+  </div>
 
-        function showError(msg) {
-            const err = document.getElementById("error");
-            err.textContent = msg;
-            err.style.display = "block";
-            document.getElementById("spinner").style.display = "none";
-            document.getElementById("content").style.display = "block";
-            document.getElementById("newQuoteBtn").disabled = false;
-        }
-        document.getElementById("copyBtn").addEventListener("click", () => {
-    const quote = document.getElementById("quote").textContent;
-    const author = document.getElementById("author").textContent;
-    navigator.clipboard.writeText(`"${quote}" ${author}`).then(() => {
+  <script>
+    const quotes = [
+      { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt", tags: ["inspiration", "dreams"] },
+      { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt", tags: ["motivation", "action"] },
+      { text: "Happiness is not something ready made. It comes from your own actions.", author: "Dalai Lama", tags: ["happiness", "wisdom"] },
+      { text: "It always seems impossible until it’s done.", author: "Nelson Mandela", tags: ["motivation", "perseverance"] },
+      { text: "Life is really simple, but we insist on making it complicated.", author: "Confucius", tags: ["wisdom", "life"] },
+      { text: "The only way to do great work is to love what you do.", author: "Steve Jobs", tags: ["work", "inspiration"] }
+    ];
+
+    const categories = [...new Set(quotes.flatMap(q => q.tags))].sort();
+
+    const categorySelect = document.getElementById("categorySelect");
+    categories.forEach(tag => {
+      const opt = document.createElement("option");
+      opt.value = tag;
+      opt.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
+      categorySelect.appendChild(opt);
+    });
+
+    function getFilteredQuotes() {
+      const selected = categorySelect.value;
+      return selected === "all" ? quotes : quotes.filter(q => q.tags.includes(selected));
+    }
+
+    function randomQuote() {
+      const filtered = getFilteredQuotes();
+      return filtered[Math.floor(Math.random() * filtered.length)] || null;
+    }
+
+    function renderQuote(q) {
+      if (!q) {
+        showError("No quotes found for this category.");
+        return;
+      }
+      document.getElementById("quote").textContent = q.text;
+      document.getElementById("author").textContent = q.author;
+      document.getElementById("error").style.display = "none";
+      hideLoading();
+    }
+
+    function fetchdata() {
+      showLoading();
+      setTimeout(() => renderQuote(randomQuote()), 500);
+    }
+
+    function showLoading() {
+      document.getElementById("spinner").style.display = "flex";
+      document.getElementById("content").style.display = "none";
+      document.getElementById("newQuoteBtn").disabled = true;
+    }
+
+    function hideLoading() {
+      setTimeout(() => {
+        document.getElementById("spinner").style.display = "none";
+        document.getElementById("content").style.display = "block";
+        document.getElementById("newQuoteBtn").disabled = false;
+        const card = document.getElementById("card");
+        card.classList.remove("show");
+        void card.offsetWidth;
+        card.classList.add("show");
+      }, 200);
+    }
+
+    function showError(msg) {
+      const err = document.getElementById("error");
+      err.textContent = msg;
+      err.style.display = "block";
+      document.getElementById("spinner").style.display = "none";
+      document.getElementById("content").style.display = "block";
+      document.getElementById("newQuoteBtn").disabled = false;
+    }
+
+    document.getElementById("copyBtn").addEventListener("click", () => {
+      const quote = document.getElementById("quote").textContent;
+      const author = document.getElementById("author").textContent;
+      navigator.clipboard.writeText(`"${quote}" — ${author}`).then(() => {
         const btn = document.getElementById("copyBtn");
         btn.textContent = "Copied!";
-        setTimeout(() => btn.textContent = "Copy", 2000);
+        setTimeout(() => btn.textContent = "Copy Quote", 2000);
+      });
     });
-});
 
-document.addEventListener("keydown", (e) => {
-    const btn = document.getElementById("newQuoteBtn");
-    if ((e.code === "Space" || e.code === "ArrowRight") && !btn.disabled) {
+    document.addEventListener("keydown", (e) => {
+      const btn = document.getElementById("newQuoteBtn");
+      if ((e.code === "Space" || e.code === "ArrowRight") && !btn.disabled) {
         e.preventDefault();
         fetchdata();
+      }
+    });
+
+    document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
+    categorySelect.addEventListener("change", fetchdata);
+
+    function todayKey() {
+      const d = new Date();
+      return `qotd_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}_${categorySelect.value}`;
     }
-});
 
+    function formatDate() {
+      return new Date().toLocaleDateString("en-US", {
+        weekday: "long", month: "long", day: "numeric"
+      });
+    }
 
-        fetchdata();
-        document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
-    </script>
+    document.getElementById("qotd-date").textContent = formatDate();
+
+    function openQotd() {
+      const panel = document.getElementById("qotd-panel");
+      panel.classList.add("open");
+      requestAnimationFrame(() => panel.classList.add("visible"));
+      loadQotd();
+    }
+
+    function closeQotd() {
+      const panel = document.getElementById("qotd-panel");
+      panel.classList.remove("visible");
+      setTimeout(() => panel.classList.remove("open"), 400);
+    }
+
+    function toggleQotd() {
+      const panel = document.getElementById("qotd-panel");
+      if (panel.classList.contains("open")) closeQotd();
+      else openQotd();
+    }
+
+    function loadQotd() {
+      const key = todayKey();
+      const cached = localStorage.getItem(key);
+      if (cached) {
+        renderQotd(JSON.parse(cached));
+        return;
+      }
+
+      const filtered = getFilteredQuotes();
+      const q = filtered[Math.floor(Math.random() * filtered.length)] || quotes[0];
+      const qotd = { text: q.text, author: q.author };
+      localStorage.setItem(key, JSON.stringify(qotd));
+      renderQotd(qotd);
+    }
+
+    function renderQotd({ text, author }) {
+      document.getElementById("qotd-inner").innerHTML =
+        `<div id="qotd-quote">${text}</div><div id="qotd-author">${author}</div>`;
+    }
+
+    document.getElementById("qotd-bar").addEventListener("click", toggleQotd);
+    document.getElementById("qotd-bar").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleQotd();
+      }
+    });
+    document.getElementById("qotdCloseBtn").addEventListener("click", closeQotd);
+
+    fetchdata();
+  </script>
 </body>
 </html>
