@@ -5,7 +5,7 @@
 
 Throughout this project there has been a bunch of challenges and one of them was a time crunch where we had to design an mvp as soon as possible to be ready to present something cool or interesting that we made using avaible javascript concepts. Even with that said I was still able to make something out of it and feel like my tool JSON api's has helped bring my idea to life. text
 
-more text(content)
+more text(con)
 
 
 ### Sources
