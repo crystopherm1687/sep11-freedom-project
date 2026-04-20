@@ -17,7 +17,7 @@ For example this part here with the date is something that I wanted users to see
       });
     }
 ```
-Since this function has been added I made sure to put it in a spot where the user could easily see it and made it blend in with the colors of gold and black so everything would work well together. Another idea i had in mind was to add specific categories for each user to want to see in my project so I added this feature to get users more adjusted to using my project and seeing some good quotes that they would feel insipired by.
+Since this function has been added I made sure to put it in a spot where the user could easily see it and made it blend in with the colors of gold and black so everything would work well together. Another idea i had in mind was to add specific categories for each user to want to see in my project so I added this feature to get users more adjusted to using my project and seeing some good quotes that they would feel inspired by. If you don't what this does it basically filters through a categories tab then puts quotes it finds through the api into local storage as a way to access specific quotes tied to that category so that the user can see their favorite quotes but in a certain topic.
 ```
     {
       const filtered = getFilteredQuotes();
@@ -31,7 +31,7 @@ My finished project is accesible here [Random quote generator](https://crystophe
 
 ### Sources
 
-The sources I used to help bring the extra details to life was [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) which helped build upon my date settings for the page and automatically change dates when I needed it. Also this page[W3schools](https://www.w3schools.com/js/js_date_methods.asp) helped clarify a couple of details when it came to building the actual time system inside my project which seems pretty useful if the user is unable to remember the date.
+The sources I used to help bring the extra details to life was [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) which helped build upon my date settings for the page and automatically change dates when I needed it. Also this page[W3schools](https://www.w3schools.com/js/js_date_methods.asp) helped clarify a couple of details when it came to building the actual time system inside my project which seems pretty useful if the user is unable to remember the date. I also used this site [coding artist web](https://codingartistweb.com/2023/09/random-quote-generator-with-local-storage/)
 ### EDP
 For the Engineering Design Process I can for sure say that I am on the 7th stage which is improving as needed because in just a couple of weeks this project will be presented so by making changes or including beyond mvp details it makes it so that my project looks even better than the original framework and more reliable to use when users decide to come look at it. Also now that the mvp has been done it makes more much easier to adjust intro present mode which would probably happen by the next blog or in a few weeks depending on the schedule.
 ### Skills
