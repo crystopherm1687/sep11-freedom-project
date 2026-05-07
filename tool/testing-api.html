@@ -1,484 +1,590 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Quote Generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #1a1714;
-            --surface: #211e1a;
-            --border: #2e2a25;
-            --accent: #c9963a;
-            --accent-dim: rgba(201, 150, 58, 0.12);
-            --text-primary: #ede8e0;
-            --text-secondary: #8a8278;
-            --text-muted: #504c47;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Quote Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1714;
+      --surface: #211e1a;
+      --border: #2e2a25;
+      --accent: #c9963a;
+      --accent-dim: rgba(201, 150, 58, 0.12);
+      --text-primary: #ede8e0;
+      --text-secondary: #8a8278;
+      --text-muted: #504c47;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background-color: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
 
-        /* Grain overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.35;
-        }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+    }
 
-        .wrapper {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 640px;
-        }
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 640px;
+    }
 
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 56px 52px 48px;
-            position: relative;
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            min-height: 280px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 56px 52px 48px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-        .card.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-        /* Decorative quote mark */
-        .card::before {
-            content: '\201C';
-            font-family: 'Playfair Display', serif;
-            font-size: 9rem;
-            line-height: 1;
-            color: var(--accent);
-            opacity: 0.18;
-            position: absolute;
-            top: 8px;
-            left: 36px;
-            pointer-events: none;
-        }
+    .card::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      font-size: 9rem;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.18;
+      position: absolute;
+      top: 8px;
+      left: 36px;
+      pointer-events: none;
+    }
 
-        /* Accent line */
-        .accent-line {
-            width: 32px;
-            height: 2px;
-            background: var(--accent);
-            margin-bottom: 32px;
-        }
+    .accent-line {
+      width: 32px;
+      height: 2px;
+      background: var(--accent);
+      margin-bottom: 18px;
+    }
 
-        /* Spinner */
-        .spinner-wrap {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 160px;
-        }
+    .spinner-wrap, .qotd-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 160px;
+    }
 
-        .spinner {
-            width: 28px;
-            height: 28px;
-            border: 2px solid var(--border);
-            border-top: 2px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 0.9s linear infinite;
-        }
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--border);
+      border-top: 2px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-        #content { display: none; }
+    #content { display: none; }
 
-        #quote {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.45rem;
-            line-height: 1.7;
-            color: var(--text-primary);
-            margin-bottom: 28px;
-            letter-spacing: 0.01em;
-        }
+    #quote, #qotd-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+    }
 
-        #author {
-            font-size: 0.8rem;
-            color: var(--accent);
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-        }
+    #quote {
+      font-size: 1.45rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
 
-        #author::before {
-            content: "— ";
-            opacity: 0.5;
-        }
+    #author, #qotd-author {
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
 
-        .btn-row {
-            display: flex;
-            justify-content: flex-start;
-        }
+    #author {
+      font-size: 0.8rem;
+      margin-bottom: 18px;
+    }
 
-        button {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            padding: 10px 24px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            border-radius: 2px;
-            cursor: pointer;
-            transition: color 0.2s, border-color 0.2s, background 0.2s;
-        }
+    #author::before, #qotd-author::before { content: "— "; opacity: 0.5; }
 
-        button:hover:not(:disabled) {
-            color: var(--accent);
-            border-color: var(--accent);
-            background: var(--accent-dim);
-        }
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      align-items: center;
+    }
 
-        button:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-        }
+    select {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      border-radius: 2px;
+      outline: none;
+    }
 
-        .error {
-            color: #c0624a;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            display: none;
-        }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-        /* Footer label */
-        .footer-label {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-        /* ── Quote of the Day banner ── */
-#qotd-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-    cursor: pointer;
-    width: fit-content;
-}
+    button {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 10px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
 
-.qotd-pill {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    border-radius: 2px;
-    padding: 3px 8px;
-    white-space: nowrap;
-    opacity: 0.85;
-}
+    button:hover:not(:disabled) {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
 
-.qotd-date {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
-}
+    button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
 
-#qotd-panel {
-    display: none;
-    margin-bottom: 16px;
-    background: var(--surface);
-    border: 1px solid var(--accent);
-    border-radius: 4px;
-    padding: 28px 32px 24px;
-    position: relative;
-    opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
+    .error {
+      color: #c0624a;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: none;
+    }
 
-#qotd-panel.open  { display: block; }
-#qotd-panel.visible { opacity: 1; transform: translateY(0); }
+    .footer-label {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
 
-.qotd-label {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+    #qotd-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      width: fit-content;
+    }
 
-.qotd-close {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-}
+    .qotd-pill {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      padding: 3px 8px;
+      white-space: nowrap;
+      opacity: 0.85;
+    }
 
-.qotd-close:hover:not(:disabled) {
-    color: var(--text-secondary);
-    border-color: transparent;
-    background: transparent;
-}
+    .qotd-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
 
-#qotd-quote {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 1.2rem;
-    line-height: 1.7;
-    color: var(--text-primary);
-    margin-bottom: 16px;
-}
+    #qotd-panel {
+      display: none;
+      margin-bottom: 16px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 28px 32px 24px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
 
-#qotd-author {
-    font-size: 0.75rem;
-    color: var(--accent);
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0.8;
-}
+    #qotd-panel.open { display: block; }
+    #qotd-panel.visible { opacity: 1; transform: translateY(0); }
 
-#qotd-author::before { content: "— "; opacity: 0.5; }
+    .qotd-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-.qotd-spinner {
-    display: flex;
-    justify-content: center;
-    padding: 20px 0;
-}
-    </style>
+    .qotd-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+
+    #qotd-quote {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    #qotd-author {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="card" id="card">
-            <div class="spinner-wrap" id="spinner">
-                <div class="spinner"></div>
-            </div>
-            <div id="content">
-                <div class="accent-line"></div>
-                <div id="quote" role="text" aria-live="polite"></div>
-                <div id="author" role="text"></div>
-                <div id="error" class="error"></div>
-                <div class="btn-row">
-                    <button id="newQuoteBtn" aria-label="Get new quote">Next Quote</button>
-                </div>
-            </div>
+  <div class="wrapper">
+    <div class="card" id="card">
+      <div class="spinner-wrap" id="spinner">
+        <div class="spinner"></div>
+      </div>
+
+      <div id="content">
+        <div class="accent-line"></div>
+        <div class="meta-row">
+          <select id="categorySelect" aria-label="Filter quotes by category">
+            <option value="all">All Categories</option>
+          </select>
         </div>
-        <p class="footer-label">Daily Wisdom</p>
-        <button id="copyBtn" aria-label="Copy quote" title="Copy to clipboard">Copy Quote</button>
-        <!-- Quote of the Day -->
-<div id="qotd-panel" role="region" aria-label="Quote of the day">
-    <div class="qotd-label">
+        <div id="quote" role="text" aria-live="polite"></div>
+        <div id="author" role="text"></div>
+        <div id="error" class="error"></div>
+        <div class="btn-row">
+          <button id="newQuoteBtn" aria-label="Get new quote">Next Quote</button>
+          <button id="copyBtn" aria-label="Copy quote" title="Copy to clipboard">Copy Quote</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer-label">Daily Wisdom</p>
+
+    <div id="qotd-panel" role="region" aria-label="Quote of the day">
+      <div class="qotd-label">
         <span>Quote of the Day</span>
         <button class="qotd-close" id="qotdCloseBtn" aria-label="Close">✕</button>
-    </div>
-    <div id="qotd-inner">
+      </div>
+      <div id="qotd-inner">
         <div class="qotd-spinner"><div class="spinner"></div></div>
+      </div>
     </div>
-</div>
 
-<div id="qotd-bar" role="button" tabindex="0" aria-label="Show quote of the day">
-    <span class="qotd-pill">Quote of the Day</span>
-    <span class="qotd-date" id="qotd-date"></span>
-</div>
+    <div id="qotd-bar" role="button" tabindex="0" aria-label="Show quote of the day">
+      <span class="qotd-pill">Quote of the Day</span>
+      <span class="qotd-date" id="qotd-date"></span>
     </div>
+  </div>
+
 
     <script>
-        function fetchdata() {
-            showLoading();
-            const callbackName = "forismaticCallback_" + Math.random().toString(36).substring(2);
-            let timeoutId;
-            const cleanup = (script) => {
-                clearTimeout(timeoutId);
-                delete window[callbackName];
-                if (script && script.parentNode) script.remove();
-            };
-            window[callbackName] = function(data) {
-                if (data && data.quoteText) {
-                    document.getElementById("quote").textContent = data.quoteText.trim();
-                    document.getElementById("author").textContent = data.quoteAuthor || "Unknown";
-                    document.getElementById("error").style.display = "none";
-                    hideLoading();
-                } else {
-                    showError("Invalid quote data received");
-                }
-                cleanup(script);
-            };
-            const script = document.createElement("script");
-            script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
-            script.onerror = () => { showError("Failed to load quote. Please try again."); cleanup(script); };
-            timeoutId = setTimeout(() => { showError("Request timed out. Please try again."); cleanup(script); }, 10000);
-            document.body.appendChild(script);
-        }
+  const quotes = [
+    { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill", tags: ["success", "perseverance"] },
+    { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis", tags: ["inspiration", "growth"] },
+    { text: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt", tags: ["future", "doubt"] },
+    { text: "Do one thing every day that scares you.", author: "Eleanor Roosevelt", tags: ["courage", "growth"] },
+    { text: "The purpose of our lives is to be happy.", author: "Dalai Lama", tags: ["happiness", "purpose"] },
+    { text: "Life is what happens when you're busy making other plans.", author: "John Lennon", tags: ["life", "wisdom"] },{ text: "Get busy living or get busy dying.", author: "Stephen King", tags: ["life", "motivation"] },
+    { text: "You only live once, but if you do it right, once is enough.", author: "Mae West", tags: ["life", "wisdom"] },{ text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein", tags: ["adversity", "opportunity"] },
+    { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson", tags: ["growth", "destiny"] },
+    { text: "Try not to become a man of success, but rather try to become a man of value.", author: "Albert Einstein", tags: ["success", "value"] },
+    { text: "The best way to predict the future is to invent it.", author: "Alan Kay", tags: ["future", "innovation"] },
+    { text: "I have not failed. I've just found 10,000 ways that won't work.", author: "Thomas Edison", tags: ["failure", "perseverance"] },
+    { text: "Don't let yesterday take up too much of today.", author: "Will Rogers", tags: ["life", "focus"] },{ text: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky", tags: ["success", "motivation"] },
+    { text: "Whether you think you can or you think you can't, you're right.", author: "Henry Ford", tags: ["belief", "mindset"] },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain", tags: ["success", "motivation"] },
+    { text: "It's not about standing still and becoming safe. If anybody wants to keep creating they have to be about change.", author: "Miles Davis", tags: ["change", "creativity"] },
+    { text: "Never let your emotions overpower your intelligence.", author: "Drake", tags: ["wisdom", "intelligence"] },
+    { text: "If you want to lift yourself up, lift up someone else.", author: "Booker T. Washington", tags: ["kindness", "growth"] },{ text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs", tags: ["life", "authenticity"] },
+    { text: "If you look at what you have in life, you'll always have more.", author: "Oprah Winfrey", tags: ["gratitude", "happiness"] },
+    { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney", tags: ["action", "success"] },
+    { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates", tags: ["wisdom", "learning"] },
+    { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle", tags: ["hope", "adversity"] },
+    { text: "Don't judge each day by the harvest you reap but by the seeds that you plant.", author: "Robert Louis Stevenson", tags: ["growth", "perseverance"] },
+    { text: "Life is either a daring adventure or nothing at all.", author: "Helen Keller", tags: ["life", "adventure"] },
+    { text: "Happiness is not something ready made. It comes from your own actions.", author: "Dalai Lama", tags: ["happiness", "action"] },
+    { text: "You must be the change you wish to see in the world.", author: "Mahatma Gandhi", tags: ["change", "leadership"] },
+    { text: "Strive not to be a success, but rather to be of value.", author: "Albert Einstein", tags: ["success", "value"] },
+    { text: "Perseverance is not a long race; it is many short races one after the other.", author: "Walter Elliot", tags: ["perseverance", "motivation"] },
+    { text: "The best preparation for tomorrow is doing your best today.", author: "H. Jackson Brown Jr.", tags: ["future", "focus"] },
+    { text: "The only thing we have to fear is fear itself.", author: "Franklin D. Roosevelt", tags: ["courage", "fear"] },
+    { text: "Everything has beauty, but not everyone sees it.", author: "Confucius", tags: ["perspective", "beauty"] },
+    { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey", tags: ["growth", "healing"] },
+    { text: "All our dreams can come true, if we have the courage to pursue them.", author: "Walt Disney", tags: ["dreams", "courage"] },
+    { text: "The swiftest way to triple your success is to double your investment in personal development.", author: "Robin Sharma", tags: ["success", "growth"] },
+    { text: "Success consists of going from failure to failure without loss of enthusiasm.", author: "Winston Churchill", tags: ["success", "perseverance"] },
+    { text: "What you do today can improve all your tomorrows.", author: "Ralph Marston", tags: ["future", "action"] },
+    { text: "You cannot shake hands with a clenched fist.", author: "Indira Gandhi", tags: ["peace", "conflict"] },
+    { text: "Change your thoughts and you change your world.", author: "Norman Vincent Peale", tags: ["mindset", "change"] },
+    { text: "It is never too late to be what you might have been.", author: "George Eliot", tags: ["growth", "inspiration"] },
+    { text: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Eleanor Roosevelt", tags: ["doubt", "future"] },
+    { text: "The difference between winning and losing is most often not quitting.", author: "Walt Disney", tags: ["success", "perseverance"] },
+    { text: "You are a perfect reflection of the choices you have made.", author: "Brendon Burchard", tags: ["life", "choices"] },
+    { text: "The only way to achieve the impossible is to believe it is possible.", author: "Charles Kingsleigh", tags: ["belief", "possibility"] },
+    { text: "Doubt kills more dreams than failure ever will.", author: "Suzy Kassem", tags: ["doubt", "dreams"] },
+    { text: "It is better to fail in originality than to succeed in imitation.", author: "Herman Melville", tags: ["creativity", "success"] },
+    { text: "If you don't like the road you're walking, start paving another one.", author: "Dolly Parton", tags: ["change", "action"] },
+    { text: "Our greatest glory is not in never falling, but in rising every time we fall.", author: "Confucius", tags: ["perseverance", "success"] },
+    { text: "Great things are done by a series of small things brought together.", author: "Vincent Van Gogh", tags: ["success", "growth"] },
+    { text: "Success is falling nine times and getting up ten.", author: "Jon Bon Jovi", tags: ["perseverance", "success"] },
+    { text: "Believe in yourself and all that you are. Know that there is something inside you that is greater than any obstacle.", author: "Christian D. Larson", tags: ["belief", "courage"] },
+    { text: "The power of finding beauty in the humblest things makes home happy and life lovely.", author: "Louisa May Alcott", tags: ["happiness", "appreciation"] },
+    { text: "What we achieve inwardly will change outer reality.", author: "Plutarch", tags: ["growth", "mindset"] },
+    { text: "Life is not a problem to be solved, but a reality to be experienced.", author: "Soren Kierkegaard", tags: ["life", "philosophy"] },
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs", tags: ["success", "passion"] },
+    { text: "Happiness is a choice that requires effort at times.", author: "Aeschylus", tags: ["happiness", "choice"] },
+    { text: "You must expect great things of yourself before you can do them.", author: "Michael Jordan", tags: ["success", "belief"] },
+    { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair", tags: ["fear", "success"] },
+    { text: "The only person you should try to be better than is the person you were yesterday.", author: "Matty Mullins", tags: ["growth", "self-improvement"] },
+    { text: "Do not wait to strike till the iron is hot; but make it hot by striking.", author: "William Butler Yeats", tags: ["action", "success"] },
+    { text: "We write to taste life twice, in the moment and in retrospect.", author: "Anais Nin", tags: ["life", "creativity"] },
+    { text: "Don't be afraid to give up the good to go for the great.", author: "John D. Rockefeller", tags: ["success", "courage"] },{ text: "Life shrinks or expands in proportion to one's courage.", author: "Anais Nin", tags: ["courage", "life"] },
+    { text: "You have to dream before your dreams can come true.", author: "A.P.J. Abdul Kalam", tags: ["dreams", "motivation"] },
+    { text: "Keep your face always toward the sunshine and shadows will fall behind you.", author: "Walt Whitman", tags: ["positivity", "optimism"] },
+    { text: "It is not the strongest of the species that survive, nor the most intelligent, but the one most responsive to change.", author: "Charles Darwin", tags: ["change", "growth"] },
+    { text: "The most important thing is to enjoy your life—to be happy.", author: "Audrey Hepburn", tags: ["happiness", "life"] },
+    { text: "The key to success is to focus on goals, not obstacles.", author: "Unknown", tags: ["success", "focus"] },
+    { text: "You can never really change your life until you change something you do daily.", author: "John C. Maxwell", tags: ["habits", "growth"] },{ text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle", tags: ["excellence", "habits"] },
+    { text: "Either you run the day, or the day runs you.", author: "Jim Rohn", tags: ["motivation", "productivity"] },
+    { text: "Don't count the days, make the days count.", author: "Muhammad Ali", tags: ["life", "productivity"] },
+    { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb", tags: ["action", "opportunity"] },
+    { text: "If you want to be happy, set a goal that commands your thoughts, liberates your energy, and inspires your hopes.", author: "Andrew Carnegie", tags: ["happiness", "goals"] },
+    { text: "The journey of a thousand miles begins with one step.", author: "Lao Tzu", tags: ["action", "perseverance"] },
+    { text: "Courage is resistance to fear, mastery of fear — not absence of fear.", author: "Mark Twain", tags: ["courage", "fear"] },
+    { text: "If you find serenity and happiness, some may be jealous. Be happy anyway.", author: "Mother Teresa", tags: ["happiness", "kindness"] },
+    { text: "There is no path to happiness: happiness is the path.", author: "Buddha", tags: ["happiness", "philosophy"] },
+    { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe", tags: ["action", "motivation"] },
+    { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt", tags: ["action", "resourcefulness"] },
+    { text: "Always turn a negative situation into a positive situation.", author: "Michael Jordan", tags: ["positivity", "resilience"] },
+    { text: "Your talent determines what you can do. Your motivation determines how much you are willing to do. Your attitude determines how well you do it.", author: "Lou Holtz", tags: ["motivation", "attitude"] },
+    { text: "Failure is the condiment that gives success its flavor.", author: "Truman Capote", tags: ["failure", "success"] },
+    { text: "Life is a journey, and if you fall in love with the journey, you will be in love forever.", author: "Peter Hagerty", tags: ["life", "joy"] },
+    { text: "If you want to achieve greatness stop asking for permission.", author: "Unknown", tags: ["success", "courage"] },
+    { text: "Difficulties break some men but make others.", author: "Nelson Mandela", tags: ["resilience", "growth"] },
+    { text: "Happiness is not something you postpone for the future; it is something you design for the present.", author: "Jim Rohn", tags: ["happiness", "present"] },
+    { text: "Don't let the noise of others' opinions drown out your own inner voice.", author: "Steve Jobs", tags: ["authenticity", "courage"] },
+    { text: "If you want to live a happy life, tie it to a goal, not to people or things.", author: "Albert Einstein", tags: ["happiness", "goals"] },
+    { text: "Your passion is waiting for your courage to catch up.", author: "Isabelle Lafleche", tags: ["passion", "courage"] },
+    { text: "It is not the load that breaks you down, it's the way you carry it.", author: "Lou Holtz", tags: ["resilience", "mindset"] },
+    { text: "Every strike brings me closer to the next home run.", author: "Babe Ruth", tags: ["failure", "success"] },
+    { text: "The unexamined life is not worth living.", author: "Socrates", tags: ["wisdom", "life"] },
+    { text: "A person who never made a mistake never tried anything new.", author: "Albert Einstein", tags: ["growth", "learning"] },
+    { text: "If you build it, they will come.", author: "Joe Jackson (character)", tags: ["action", "success"] },
+    { text: "The future belongs to those who prepare for it today.", author: "Malcolm X", tags: ["future", "preparation"] },
+  ];
 
-        function showLoading() {
-            document.getElementById("spinner").style.display = "flex";
-            document.getElementById("content").style.display = "none";
-            document.getElementById("newQuoteBtn").disabled = true;
-        }
+  const categories = [...new Set(quotes.flatMap(q => q.tags))].sort();
+  const categorySelect = document.getElementById("categorySelect");
 
-        function hideLoading() {
-            setTimeout(() => {
-                document.getElementById("spinner").style.display = "none";
-                document.getElementById("content").style.display = "block";
-                document.getElementById("newQuoteBtn").disabled = false;
-                const card = document.getElementById("card");
-                card.classList.remove("show");
-                void card.offsetWidth;
-                card.classList.add("show");
-            }, 700);
-        }
+  categories.forEach(tag => {
+    const opt = document.createElement("option");
+    opt.value = tag;
+    opt.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
+    categorySelect.appendChild(opt);
+  });
 
-        function showError(msg) {
-            const err = document.getElementById("error");
-            err.textContent = msg;
-            err.style.display = "block";
-            document.getElementById("spinner").style.display = "none";
-            document.getElementById("content").style.display = "block";
-            document.getElementById("newQuoteBtn").disabled = false;
-        }
-        document.getElementById("copyBtn").addEventListener("click", () => {
+  let lastQuoteIndex = -1;
+  let lastQotdIndex = {};
+
+  function getFilteredQuotes() {
+    const selected = categorySelect.value;
+    return selected === "all" ? quotes : quotes.filter(q => q.tags.includes(selected));
+  }
+
+  function getNewRandomQuote(list, lastIndex) {
+    if (!list.length) return null;
+    if (list.length === 1) return { quote: list[0], index: 0 };
+
+    let index;
+    do {
+      index = Math.floor(Math.random() * list.length);
+    } while (index === lastIndex);
+
+    return { quote: list[index], index };
+  }
+
+  function renderQuote(q) {
+    if (!q) {
+      showError("No quotes found for this category.");
+      return;
+    }
+    document.getElementById("quote").textContent = q.text;
+    document.getElementById("author").textContent = q.author;
+    document.getElementById("error").style.display = "none";
+    hideLoading();
+  }
+
+  function fetchdata() {
+    showLoading();
+    setTimeout(() => {
+      const filtered = getFilteredQuotes();
+      const result = getNewRandomQuote(filtered, lastQuoteIndex);
+      if (result) lastQuoteIndex = result.index;
+      renderQuote(result ? result.quote : null);
+    }, 500);
+  }
+
+  function showLoading() {
+    document.getElementById("spinner").style.display = "flex";
+    document.getElementById("content").style.display = "none";
+    document.getElementById("newQuoteBtn").disabled = true;
+  }
+
+  function hideLoading() {
+    setTimeout(() => {
+      document.getElementById("spinner").style.display = "none";
+      document.getElementById("content").style.display = "block";
+      document.getElementById("newQuoteBtn").disabled = false;
+      const card = document.getElementById("card");
+      card.classList.remove("show");
+      void card.offsetWidth;
+      card.classList.add("show");
+    }, 200);
+  }
+
+  function showError(msg) {
+    const err = document.getElementById("error");
+    err.textContent = msg;
+    err.style.display = "block";
+    document.getElementById("spinner").style.display = "none";
+    document.getElementById("content").style.display = "block";
+    document.getElementById("newQuoteBtn").disabled = false;
+  }
+
+  document.getElementById("copyBtn").addEventListener("click", () => {
     const quote = document.getElementById("quote").textContent;
     const author = document.getElementById("author").textContent;
-    navigator.clipboard.writeText(`"${quote}" ${author}`).then(() => {
-        const btn = document.getElementById("copyBtn");
-        btn.textContent = "Copied!";
-        setTimeout(() => btn.textContent = "Copy", 2000);
+    navigator.clipboard.writeText(`"${quote}" — ${author}`).then(() => {
+      const btn = document.getElementById("copyBtn");
+      btn.textContent = "Copied!";
+      setTimeout(() => btn.textContent = "Copy Quote", 2000);
     });
-});
+  });
 
-document.addEventListener("keydown", (e) => {
+  document.addEventListener("keydown", (e) => {
     const btn = document.getElementById("newQuoteBtn");
     if ((e.code === "Space" || e.code === "ArrowRight") && !btn.disabled) {
-        e.preventDefault();
-        fetchdata();
+      e.preventDefault();
+      fetchdata();
     }
-});
+  });
 
+  document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
+  categorySelect.addEventListener("change", () => {
+    lastQuoteIndex = -1;
+    fetchdata();
+  });
 
-        fetchdata();
-        document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
-// ── Quote of the Day ──
-function todayKey() {
+  function todayKey() {
     const d = new Date();
-    return `qotd_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
-}
+    return `qotd_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}_${categorySelect.value}`;
+  }
 
-function formatDate() {
+  function formatDate() {
     return new Date().toLocaleDateString("en-US", {
-        weekday: "long", month: "long", day: "numeric"
+      weekday: "long", month: "long", day: "numeric"
     });
-}
+  }
 
-document.getElementById("qotd-date").textContent = formatDate();
+  document.getElementById("qotd-date").textContent = formatDate();
 
-function openQotd() {
+  function openQotd() {
     const panel = document.getElementById("qotd-panel");
     panel.classList.add("open");
     requestAnimationFrame(() => panel.classList.add("visible"));
     loadQotd();
-}
+  }
 
-function closeQotd() {
+  function closeQotd() {
     const panel = document.getElementById("qotd-panel");
     panel.classList.remove("visible");
     setTimeout(() => panel.classList.remove("open"), 400);
-}
+  }
 
-function toggleQotd() {
+  function toggleQotd() {
     const panel = document.getElementById("qotd-panel");
-    if (panel.classList.contains("open")) { closeQotd(); } else { openQotd(); }
-}
+    if (panel.classList.contains("open")) closeQotd();
+    else openQotd();
+  }
 
-function loadQotd() {
+  function loadQotd() {
     const key = todayKey();
     const cached = localStorage.getItem(key);
-    if (cached) { renderQotd(JSON.parse(cached)); return; }
+    if (cached) {
+      renderQotd(JSON.parse(cached));
+      return;
+    }
 
-    // Nothing saved yet — fetch a fresh quote for today
-    const inner = document.getElementById("qotd-inner");
-    inner.innerHTML = `<div class="qotd-spinner"><div class="spinner"></div></div>`;
+    const filtered = getFilteredQuotes();
+    const prevIndex = lastQotdIndex[key] ?? -1;
+    const result = getNewRandomQuote(filtered, prevIndex);
+    const qotd = result ? { text: result.quote.text, author: result.quote.author } : quotes[0];
+    lastQotdIndex[key] = result ? result.index : 0;
 
-    const callbackName = "qotdCallback_" + Math.random().toString(36).substring(2);
-    let timeoutId;
-    const cleanup = (script) => {
-        clearTimeout(timeoutId);
-        delete window[callbackName];
-        if (script && script.parentNode) script.remove();
-    };
+    localStorage.setItem(key, JSON.stringify(qotd));
+    renderQotd(qotd);
+  }
 
-    window[callbackName] = function(data) {
-        if (data && data.quoteText) {
-            const qotd = {
-                text: data.quoteText.trim(),
-                author: data.quoteAuthor ? data.quoteAuthor.trim() : "Unknown"
-            };
-            localStorage.setItem(key, JSON.stringify(qotd)); // save for the day
-            renderQotd(qotd);
-        } else {
-            inner.innerHTML = `<p style="color:#c0624a;font-size:0.85rem;">Could not load today's quote.</p>`;
-        }
-        cleanup(script);
-    };
-
-    const script = document.createElement("script");
-    script.src = `https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=${callbackName}`;
-    script.onerror = () => {
-        inner.innerHTML = `<p style="color:#c0624a;font-size:0.85rem;">Failed to load.</p>`;
-        cleanup(script);
-    };
-    timeoutId = setTimeout(() => {
-        inner.innerHTML = `<p style="color:#c0624a;font-size:0.85rem;">Request timed out.</p>`;
-        cleanup(script);
-    }, 10000);
-    document.body.appendChild(script);
-}
-
-function renderQotd({ text, author }) {
+  function renderQotd({ text, author }) {
     document.getElementById("qotd-inner").innerHTML =
-        `<div id="qotd-quote">${text}</div><div id="qotd-author">${author}</div>`;
-}
+      `<div id="qotd-quote">${text}</div><div id="qotd-author">${author}</div>`;
+  }
 
-document.getElementById("qotd-bar").addEventListener("click", toggleQotd);
-document.getElementById("qotd-bar").addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleQotd(); }
-});
-document.getElementById("qotdCloseBtn").addEventListener("click", closeQotd);
-    </script>
+  document.getElementById("qotd-bar").addEventListener("click", toggleQotd);
+  document.getElementById("qotd-bar").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleQotd();
+    }
+  });
+  document.getElementById("qotdCloseBtn").addEventListener("click", closeQotd);
+
+  fetchdata();
+</script>
 </body>
 </html>
