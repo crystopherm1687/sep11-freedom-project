@@ -10,6 +10,7 @@
 * Present MVP
   * code snippnets
   * click button, press right arrow and space bar
+  * quote of the day
 ## Conclusion
 *
 
