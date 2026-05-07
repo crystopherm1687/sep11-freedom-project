@@ -7,8 +7,9 @@
 * live demo of the project and explain a bit about the work spent on it.
 
 ## Process
-* 
-
+* Present MVP
+  * code snippnets
+  * click button, press right arrow and space bar
 ## Conclusion
 *
 
