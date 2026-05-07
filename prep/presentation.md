@@ -1,16 +1,16 @@
 # Presentation Plan
 
 ## Hook
-* 
+* raise you hand if you have ever felt insipired one day, then have you ever considered getting quotes directly from the source and not having to look for a good one?
 
 ## Product
-* 
+*
 
 ## Process
-* 
+*
 
 ## Conclusion
-* 
+*
 
 <!-- EXAMPLE
 
