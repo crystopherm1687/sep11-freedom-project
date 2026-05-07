@@ -321,162 +321,230 @@
     </div>
   </div>
 
-  <script>
-    const quotes = [
-      { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt", tags: ["inspiration", "dreams"] },
-      { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt", tags: ["motivation", "action"] },
-      { text: "Happiness is not something ready made. It comes from your own actions.", author: "Dalai Lama", tags: ["happiness", "wisdom"] },
-      { text: "It always seems impossible until it’s done.", author: "Nelson Mandela", tags: ["motivation", "perseverance"] },
-      { text: "Life is really simple, but we insist on making it complicated.", author: "Confucius", tags: ["wisdom", "life"] },
-      { text: "The only way to do great work is to love what you do.", author: "Steve Jobs", tags: ["work", "inspiration"] }
-    ];
+ <script>
+  const quotes = [
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs", tags: ["success", "passion"] },
+    { text: "Happiness is a choice that requires effort at times.", author: "Aeschylus", tags: ["happiness", "choice"] },
+    { text: "You must expect great things of yourself before you can do them.", author: "Michael Jordan", tags: ["success", "belief"] },
+    { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair", tags: ["fear", "success"] },
+    { text: "The only person you should try to be better than is the person you were yesterday.", author: "Matty Mullins", tags: ["growth", "self-improvement"] },
+    { text: "Do not wait to strike till the iron is hot; but make it hot by striking.", author: "William Butler Yeats", tags: ["action", "success"] },
+    { text: "We write to taste life twice, in the moment and in retrospect.", author: "Anais Nin", tags: ["life", "creativity"] },
+    { text: "Don't be afraid to give up the good to go for the great.", author: "John D. Rockefeller", tags: ["success", "courage"] },
+    { text: "Life shrinks or expands in proportion to one's courage.", author: "Anais Nin", tags: ["courage", "life"] },
+    { text: "You have to dream before your dreams can come true.", author: "A.P.J. Abdul Kalam", tags: ["dreams", "motivation"] },
+    { text: "Keep your face always toward the sunshine and shadows will fall behind you.", author: "Walt Whitman", tags: ["positivity", "optimism"] },
+    { text: "It is not the strongest of the species that survive, nor the most intelligent, but the one most responsive to change.", author: "Charles Darwin", tags: ["change", "growth"] },
+    { text: "The most important thing is to enjoy your life—to be happy.", author: "Audrey Hepburn", tags: ["happiness", "life"] },
+    { text: "The key to success is to focus on goals, not obstacles.", author: "Unknown", tags: ["success", "focus"] },
+    { text: "You can never really change your life until you change something you do daily.", author: "John C. Maxwell", tags: ["habits", "growth"] },
+    { text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle", tags: ["excellence", "habits"] },
+    { text: "Either you run the day, or the day runs you.", author: "Jim Rohn", tags: ["motivation", "productivity"] },
+    { text: "Don't count the days, make the days count.", author: "Muhammad Ali", tags: ["life", "productivity"] },
+    { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb", tags: ["action", "opportunity"] },
+    { text: "If you want to be happy, set a goal that commands your thoughts, liberates your energy, and inspires your hopes.", author: "Andrew Carnegie", tags: ["happiness", "goals"] },
+    { text: "The journey of a thousand miles begins with one step.", author: "Lao Tzu", tags: ["action", "perseverance"] },
+    { text: "Courage is resistance to fear, mastery of fear — not absence of fear.", author: "Mark Twain", tags: ["courage", "fear"] },
+    { text: "If you find serenity and happiness, some may be jealous. Be happy anyway.", author: "Mother Teresa", tags: ["happiness", "kindness"] },
+    { text: "There is no path to happiness: happiness is the path.", author: "Buddha", tags: ["happiness", "philosophy"] },
+    { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe", tags: ["action", "motivation"] },
+    { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt", tags: ["action", "resourcefulness"] },
+    { text: "Always turn a negative situation into a positive situation.", author: "Michael Jordan", tags: ["positivity", "resilience"] },
+    { text: "Your talent determines what you can do. Your motivation determines how much you are willing to do. Your attitude determines how well you do it.", author: "Lou Holtz", tags: ["motivation", "attitude"] },
+    { text: "Failure is the condiment that gives success its flavor.", author: "Truman Capote", tags: ["failure", "success"] },
+    { text: "Life is a journey, and if you fall in love with the journey, you will be in love forever.", author: "Peter Hagerty", tags: ["life", "joy"] },
+    { text: "If you want to achieve greatness stop asking for permission.", author: "Unknown", tags: ["success", "courage"] },
+    { text: "Difficulties break some men but make others.", author: "Nelson Mandela", tags: ["resilience", "growth"] },
+    { text: "Happiness is not something you postpone for the future; it is something you design for the present.", author: "Jim Rohn", tags: ["happiness", "present"] },
+    { text: "Don't let the noise of others' opinions drown out your own inner voice.", author: "Steve Jobs", tags: ["authenticity", "courage"] },
+    { text: "If you want to live a happy life, tie it to a goal, not to people or things.", author: "Albert Einstein", tags: ["happiness", "goals"] },
+    { text: "Your passion is waiting for your courage to catch up.", author: "Isabelle Lafleche", tags: ["passion", "courage"] },
+    { text: "It is not the load that breaks you down, it's the way you carry it.", author: "Lou Holtz", tags: ["resilience", "mindset"] },
+    { text: "Every strike brings me closer to the next home run.", author: "Babe Ruth", tags: ["failure", "success"] },
+    { text: "The unexamined life is not worth living.", author: "Socrates", tags: ["wisdom", "life"] },
+    { text: "A person who never made a mistake never tried anything new.", author: "Albert Einstein", tags: ["growth", "learning"] },
+    { text: "If you build it, they will come.", author: "Joe Jackson (character)", tags: ["action", "success"] },
+    { text: "The future belongs to those who prepare for it today.", author: "Malcolm X", tags: ["future", "preparation"] }
+  ].map((q, i) => ({ ...q, id: i }));
 
-    const categories = [...new Set(quotes.flatMap(q => q.tags))].sort();
+  const categorySelect = document.getElementById("categorySelect");
+  const quoteEl = document.getElementById("quote");
+  const authorEl = document.getElementById("author");
+  const errorEl = document.getElementById("error");
+  const spinnerEl = document.getElementById("spinner");
+  const contentEl = document.getElementById("content");
+  const newQuoteBtn = document.getElementById("newQuoteBtn");
+  const cardEl = document.getElementById("card");
+  const qotdInner = document.getElementById("qotd-inner");
+  const qotdDate = document.getElementById("qotd-date");
+  const qotdPanel = document.getElementById("qotd-panel");
 
-    const categorySelect = document.getElementById("categorySelect");
-    categories.forEach(tag => {
-      const opt = document.createElement("option");
-      opt.value = tag;
-      opt.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
-      categorySelect.appendChild(opt);
+  const categories = [...new Set(quotes.flatMap(q => q.tags))].sort();
+  const usedMainIds = new Set(JSON.parse(localStorage.getItem("usedMainIds") || "[]"));
+  const usedQotdIds = new Set(JSON.parse(localStorage.getItem("usedQotdIds") || "[]"));
+
+  function saveSets() {
+    localStorage.setItem("usedMainIds", JSON.stringify([...usedMainIds]));
+    localStorage.setItem("usedQotdIds", JSON.stringify([...usedQotdIds]));
+  }
+
+  categories.forEach(tag => {
+    const opt = document.createElement("option");
+    opt.value = tag;
+    opt.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
+    categorySelect.appendChild(opt);
+  });
+
+  function getFilteredQuotes() {
+    const selected = categorySelect.value;
+    return selected === "all"
+      ? quotes
+      : quotes.filter(q => q.tags.includes(selected));
+  }
+
+  function pickQuote(pool, usedSet) {
+    let available = pool.filter(q => !usedSet.has(q.id));
+    if (available.length === 0) {
+      usedSet.clear();
+      available = pool;
+    }
+    if (available.length === 0) return null;
+    const picked = available[Math.floor(Math.random() * available.length)];
+    usedSet.add(picked.id);
+    saveSets();
+    return picked;
+  }
+
+  function getNextMainQuote() {
+    return pickQuote(getFilteredQuotes(), usedMainIds);
+  }
+
+  function getNextQotdQuote() {
+    return pickQuote(quotes, usedQotdIds);
+  }
+
+  function renderQuote(q) {
+    if (!q) {
+      showError("No quotes found for this category.");
+      return;
+    }
+    quoteEl.textContent = q.text;
+    authorEl.textContent = q.author;
+    errorEl.style.display = "none";
+    hideLoading();
+  }
+
+  function fetchdata() {
+    showLoading();
+    setTimeout(() => renderQuote(getNextMainQuote()), 500);
+  }
+
+  function showLoading() {
+    spinnerEl.style.display = "flex";
+    contentEl.style.display = "none";
+    newQuoteBtn.disabled = true;
+  }
+
+  function hideLoading() {
+    setTimeout(() => {
+      spinnerEl.style.display = "none";
+      contentEl.style.display = "block";
+      newQuoteBtn.disabled = false;
+      cardEl.classList.remove("show");
+      void cardEl.offsetWidth;
+      cardEl.classList.add("show");
+    }, 200);
+  }
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.style.display = "block";
+    spinnerEl.style.display = "none";
+    contentEl.style.display = "block";
+    newQuoteBtn.disabled = false;
+  }
+
+  function todayKey() {
+    const d = new Date();
+    return `qotd_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
+  }
+
+  function formatDate() {
+    return new Date().toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric"
     });
+  }
 
-    function getFilteredQuotes() {
-      const selected = categorySelect.value;
-      return selected === "all" ? quotes : quotes.filter(q => q.tags.includes(selected));
+  function renderQotd(q) {
+    qotdInner.innerHTML = `<div id="qotd-quote">${q.text}</div><div id="qotd-author">${q.author}</div>`;
+  }
+
+  function loadQotd() {
+    const key = todayKey();
+    const cached = localStorage.getItem(key);
+    if (cached) {
+      renderQotd(JSON.parse(cached));
+      return;
     }
-
-    function randomQuote() {
-      const filtered = getFilteredQuotes();
-      return filtered[Math.floor(Math.random() * filtered.length)] || null;
+    const q = getNextQotdQuote();
+    if (!q) {
+      qotdInner.innerHTML = `<div id="qotd-quote">No quote available.</div><div id="qotd-author">Unknown</div>`;
+      return;
     }
+    const qotd = { text: q.text, author: q.author };
+    localStorage.setItem(key, JSON.stringify(qotd));
+    renderQotd(qotd);
+  }
 
-    function renderQuote(q) {
-      if (!q) {
-        showError("No quotes found for this category.");
-        return;
-      }
-      document.getElementById("quote").textContent = q.text;
-      document.getElementById("author").textContent = q.author;
-      document.getElementById("error").style.display = "none";
-      hideLoading();
-    }
+  function openQotd() {
+    qotdPanel.classList.add("open");
+    requestAnimationFrame(() => qotdPanel.classList.add("visible"));
+    loadQotd();
+  }
 
-    function fetchdata() {
-      showLoading();
-      setTimeout(() => renderQuote(randomQuote()), 500);
-    }
+  function closeQotd() {
+    qotdPanel.classList.remove("visible");
+    setTimeout(() => qotdPanel.classList.remove("open"), 400);
+  }
 
-    function showLoading() {
-      document.getElementById("spinner").style.display = "flex";
-      document.getElementById("content").style.display = "none";
-      document.getElementById("newQuoteBtn").disabled = true;
-    }
+  function toggleQotd() {
+    if (qotdPanel.classList.contains("open")) closeQotd();
+    else openQotd();
+  }
 
-    function hideLoading() {
-      setTimeout(() => {
-        document.getElementById("spinner").style.display = "none";
-        document.getElementById("content").style.display = "block";
-        document.getElementById("newQuoteBtn").disabled = false;
-        const card = document.getElementById("card");
-        card.classList.remove("show");
-        void card.offsetWidth;
-        card.classList.add("show");
-      }, 200);
-    }
-
-    function showError(msg) {
-      const err = document.getElementById("error");
-      err.textContent = msg;
-      err.style.display = "block";
-      document.getElementById("spinner").style.display = "none";
-      document.getElementById("content").style.display = "block";
-      document.getElementById("newQuoteBtn").disabled = false;
-    }
-
-    document.getElementById("copyBtn").addEventListener("click", () => {
-      const quote = document.getElementById("quote").textContent;
-      const author = document.getElementById("author").textContent;
-      navigator.clipboard.writeText(`"${quote}" — ${author}`).then(() => {
-        const btn = document.getElementById("copyBtn");
-        btn.textContent = "Copied!";
-        setTimeout(() => btn.textContent = "Copy Quote", 2000);
-      });
+  document.getElementById("copyBtn").addEventListener("click", () => {
+    const quote = quoteEl.textContent;
+    const author = authorEl.textContent;
+    navigator.clipboard.writeText(`"${quote}" — ${author}`).then(() => {
+      const btn = document.getElementById("copyBtn");
+      btn.textContent = "Copied!";
+      setTimeout(() => btn.textContent = "Copy Quote", 2000);
     });
+  });
 
-    document.addEventListener("keydown", (e) => {
-      const btn = document.getElementById("newQuoteBtn");
-      if ((e.code === "Space" || e.code === "ArrowRight") && !btn.disabled) {
-        e.preventDefault();
-        fetchdata();
-      }
-    });
-
-    document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
-    categorySelect.addEventListener("change", fetchdata);
-
-    function todayKey() {
-      const d = new Date();
-      return `qotd_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}_${categorySelect.value}`;
+  document.addEventListener("keydown", (e) => {
+    if ((e.code === "Space" || e.code === "ArrowRight") && !newQuoteBtn.disabled) {
+      e.preventDefault();
+      fetchdata();
     }
+  });
 
-    function formatDate() {
-      return new Date().toLocaleDateString("en-US", {
-        weekday: "long", month: "long", day: "numeric"
-      });
+  newQuoteBtn.addEventListener("click", fetchdata);
+  categorySelect.addEventListener("change", fetchdata);
+
+  document.getElementById("qotd-bar").addEventListener("click", toggleQotd);
+  document.getElementById("qotd-bar").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleQotd();
     }
+  });
+  document.getElementById("qotdCloseBtn").addEventListener("click", closeQotd);
 
-    document.getElementById("qotd-date").textContent = formatDate();
-
-    function openQotd() {
-      const panel = document.getElementById("qotd-panel");
-      panel.classList.add("open");
-      requestAnimationFrame(() => panel.classList.add("visible"));
-      loadQotd();
-    }
-
-    function closeQotd() {
-      const panel = document.getElementById("qotd-panel");
-      panel.classList.remove("visible");
-      setTimeout(() => panel.classList.remove("open"), 400);
-    }
-
-    function toggleQotd() {
-      const panel = document.getElementById("qotd-panel");
-      if (panel.classList.contains("open")) closeQotd();
-      else openQotd();
-    }
-
-    function loadQotd() {
-      const key = todayKey();
-      const cached = localStorage.getItem(key);
-      if (cached) {
-        renderQotd(JSON.parse(cached));
-        return;
-      }
-
-      const filtered = getFilteredQuotes();
-      const q = filtered[Math.floor(Math.random() * filtered.length)] || quotes[0];
-      const qotd = { text: q.text, author: q.author };
-      localStorage.setItem(key, JSON.stringify(qotd));
-      renderQotd(qotd);
-    }
-
-    function renderQotd({ text, author }) {
-      document.getElementById("qotd-inner").innerHTML =
-        `<div id="qotd-quote">${text}</div><div id="qotd-author">${author}</div>`;
-    }
-
-    document.getElementById("qotd-bar").addEventListener("click", toggleQotd);
-    document.getElementById("qotd-bar").addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        toggleQotd();
-      }
-    });
-    document.getElementById("qotdCloseBtn").addEventListener("click", closeQotd);
-
-    fetchdata();
-  </script>
+  qotdDate.textContent = formatDate();
+  fetchdata();
+</script>
 </body>
 </html>

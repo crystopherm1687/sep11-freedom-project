@@ -418,8 +418,16 @@
     { text: "The future belongs to those who prepare for it today.", author: "Malcolm X", tags: ["future", "preparation"] },
   ];
 
-  const categories = [...new Set(quotes.flatMap(q => q.tags))].sort();
   const categorySelect = document.getElementById("categorySelect");
+  const quoteEl = document.getElementById("quote");
+  const authorEl = document.getElementById("author");
+  const errorEl = document.getElementById("error");
+  const spinnerEl = document.getElementById("spinner");
+  const contentEl = document.getElementById("content");
+  const newQuoteBtn = document.getElementById("newQuoteBtn");
+  const cardEl = document.getElementById("card");
+
+  const categories = [...new Set(quotes.flatMap(q => q.tags))].sort();
 
   categories.forEach(tag => {
     const opt = document.createElement("option");
@@ -428,162 +436,90 @@
     categorySelect.appendChild(opt);
   });
 
-  let lastQuoteIndex = -1;
-  let lastQotdIndex = {};
+  const quotePools = {};
 
   function getFilteredQuotes() {
     const selected = categorySelect.value;
-    return selected === "all" ? quotes : quotes.filter(q => q.tags.includes(selected));
+    return selected === "all"
+      ? quotes
+      : quotes.filter(q => q.tags.includes(selected));
   }
 
-  function getNewRandomQuote(list, lastIndex) {
-    if (!list.length) return null;
-    if (list.length === 1) return { quote: list[0], index: 0 };
-
-    let index;
-    do {
-      index = Math.floor(Math.random() * list.length);
-    } while (index === lastIndex);
-
-    return { quote: list[index], index };
+  function getPoolKey() {
+    return categorySelect.value;
   }
+
+  function getUnusedPool() {
+    const key = getPoolKey();
+    if (!quotePools[key] || quotePools[key].length === 0) {
+      quotePools[key] = [...getFilteredQuotes()];
+    }
+    return quotePools[key];
+  }
+
+  function randomQuote() {
+    const pool = getUnusedPool();
+    if (pool.length === 0) return null;
+
+    const index = Math.floor(Math.random() * pool.length);
+    return pool.splice(index, 1)[0];
+  }
+
+  document.addEventListener("keydown", (e) => {
+      const btn = document.getElementById("newQuoteBtn");
+      if ((e.code === "Space" || e.code === "ArrowRight") && !btn.disabled) {
+        e.preventDefault();
+        fetchdata();
+      }
+    });
 
   function renderQuote(q) {
     if (!q) {
       showError("No quotes found for this category.");
       return;
     }
-    document.getElementById("quote").textContent = q.text;
-    document.getElementById("author").textContent = q.author;
-    document.getElementById("error").style.display = "none";
+    quoteEl.textContent = q.text;
+    authorEl.textContent = q.author;
+    errorEl.style.display = "none";
     hideLoading();
   }
 
   function fetchdata() {
     showLoading();
-    setTimeout(() => {
-      const filtered = getFilteredQuotes();
-      const result = getNewRandomQuote(filtered, lastQuoteIndex);
-      if (result) lastQuoteIndex = result.index;
-      renderQuote(result ? result.quote : null);
-    }, 500);
+    setTimeout(() => renderQuote(randomQuote()), 500);
   }
 
   function showLoading() {
-    document.getElementById("spinner").style.display = "flex";
-    document.getElementById("content").style.display = "none";
-    document.getElementById("newQuoteBtn").disabled = true;
+    spinnerEl.style.display = "flex";
+    contentEl.style.display = "none";
+    newQuoteBtn.disabled = true;
   }
 
   function hideLoading() {
     setTimeout(() => {
-      document.getElementById("spinner").style.display = "none";
-      document.getElementById("content").style.display = "block";
-      document.getElementById("newQuoteBtn").disabled = false;
-      const card = document.getElementById("card");
-      card.classList.remove("show");
-      void card.offsetWidth;
-      card.classList.add("show");
+      spinnerEl.style.display = "none";
+      contentEl.style.display = "block";
+      newQuoteBtn.disabled = false;
+      cardEl.classList.remove("show");
+      void cardEl.offsetWidth;
+      cardEl.classList.add("show");
     }, 200);
   }
 
   function showError(msg) {
-    const err = document.getElementById("error");
-    err.textContent = msg;
-    err.style.display = "block";
-    document.getElementById("spinner").style.display = "none";
-    document.getElementById("content").style.display = "block";
-    document.getElementById("newQuoteBtn").disabled = false;
+    errorEl.textContent = msg;
+    errorEl.style.display = "block";
+    spinnerEl.style.display = "none";
+    contentEl.style.display = "block";
+    newQuoteBtn.disabled = false;
   }
 
-  document.getElementById("copyBtn").addEventListener("click", () => {
-    const quote = document.getElementById("quote").textContent;
-    const author = document.getElementById("author").textContent;
-    navigator.clipboard.writeText(`"${quote}" — ${author}`).then(() => {
-      const btn = document.getElementById("copyBtn");
-      btn.textContent = "Copied!";
-      setTimeout(() => btn.textContent = "Copy Quote", 2000);
-    });
-  });
-
-  document.addEventListener("keydown", (e) => {
-    const btn = document.getElementById("newQuoteBtn");
-    if ((e.code === "Space" || e.code === "ArrowRight") && !btn.disabled) {
-      e.preventDefault();
-      fetchdata();
-    }
-  });
-
-  document.getElementById("newQuoteBtn").addEventListener("click", fetchdata);
   categorySelect.addEventListener("change", () => {
-    lastQuoteIndex = -1;
+    quotePools[categorySelect.value] = [];
     fetchdata();
   });
 
-  function todayKey() {
-    const d = new Date();
-    return `qotd_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}_${categorySelect.value}`;
-  }
-
-  function formatDate() {
-    return new Date().toLocaleDateString("en-US", {
-      weekday: "long", month: "long", day: "numeric"
-    });
-  }
-
-  document.getElementById("qotd-date").textContent = formatDate();
-
-  function openQotd() {
-    const panel = document.getElementById("qotd-panel");
-    panel.classList.add("open");
-    requestAnimationFrame(() => panel.classList.add("visible"));
-    loadQotd();
-  }
-
-  function closeQotd() {
-    const panel = document.getElementById("qotd-panel");
-    panel.classList.remove("visible");
-    setTimeout(() => panel.classList.remove("open"), 400);
-  }
-
-  function toggleQotd() {
-    const panel = document.getElementById("qotd-panel");
-    if (panel.classList.contains("open")) closeQotd();
-    else openQotd();
-  }
-
-  function loadQotd() {
-    const key = todayKey();
-    const cached = localStorage.getItem(key);
-    if (cached) {
-      renderQotd(JSON.parse(cached));
-      return;
-    }
-
-    const filtered = getFilteredQuotes();
-    const prevIndex = lastQotdIndex[key] ?? -1;
-    const result = getNewRandomQuote(filtered, prevIndex);
-    const qotd = result ? { text: result.quote.text, author: result.quote.author } : quotes[0];
-    lastQotdIndex[key] = result ? result.index : 0;
-
-    localStorage.setItem(key, JSON.stringify(qotd));
-    renderQotd(qotd);
-  }
-
-  function renderQotd({ text, author }) {
-    document.getElementById("qotd-inner").innerHTML =
-      `<div id="qotd-quote">${text}</div><div id="qotd-author">${author}</div>`;
-  }
-
-  document.getElementById("qotd-bar").addEventListener("click", toggleQotd);
-  document.getElementById("qotd-bar").addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggleQotd();
-    }
-  });
-  document.getElementById("qotdCloseBtn").addEventListener("click", closeQotd);
-
+  newQuoteBtn.addEventListener("click", fetchdata);
   fetchdata();
 </script>
 </body>
