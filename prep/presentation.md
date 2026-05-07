@@ -1,7 +1,7 @@
 # Presentation Plan
 
 ## Hook
-* raise you hand if you have ever felt inspired one day, well have you wondered about feeling 
+* raise you hand if you have ever felt inspired one day, well have you ever wanted to hear the exact words needed to be 
 
 ## Product
 *
