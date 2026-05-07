@@ -1,10 +1,10 @@
 # Presentation Plan
 
 ## Hook
-* raise you hand if you have ever felt inspired one day, well have you ever wanted to hear the exact words needed to be 
+* raise you hand if you have ever felt inspired one day, well have you ever wanted to hear the exact words needed to feel that
 
 ## Product
-*
+* live demo and explanation 
 
 ## Process
 *
