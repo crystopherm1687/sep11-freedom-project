@@ -1,13 +1,13 @@
 # Presentation Plan
 
 ## Hook
-* raise you hand if you have ever felt inspired one day, well have you ever wanted to hear the exact words needed to feel that
+* raise your hand if you have ever felt inspired one day, well have you ever wanted to hear the exact words for motivation, then you need to see this
 
 ## Product
 * live demo of the project and explain a bit about the work spent on it.
 
 ## Process
-* Present MVP
+* Explain BTS leading to the project
   * code snippnets
   * click button, press right arrow and space bar
   * quote of the day

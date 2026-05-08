@@ -241,8 +241,9 @@
       transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    #qotd-panel.open { display: block; }
-    #qotd-panel.visible { opacity: 1; transform: translateY(0); }
+    #qotd-panel.visible {
+      opacity: 1; transform: translateY(0);
+    }
 
     .qotd-label {
       font-size: 0.68rem;
@@ -277,6 +278,12 @@
       font-size: 0.75rem;
       opacity: 0.8;
     }
+    .date-display {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
@@ -292,6 +299,7 @@
           <select id="categorySelect" aria-label="Filter quotes by category">
             <option value="all">All Categories</option>
           </select>
+          <div class="date-display" id="currentDate"></div>
         </div>
         <div id="quote" role="text" aria-live="polite"></div>
         <div id="author" role="text"></div>
@@ -473,16 +481,101 @@
       }
     });
 
-  function renderQuote(q) {
-    if (!q) {
-      showError("No quotes found for this category.");
-      return;
+      function renderQuote(q) {
+        if (!q) {
+          showError("No quotes found for this category.");
+          return;
+        }
+        quoteEl.textContent = q.text;
+        authorEl.textContent = q.author;
+        errorEl.style.display = "none";
+        hideLoading();
+      }
+      // QOTD
+
+    function getQotdKey() {
+      const d = new Date();
+
+      return `qotd-${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
     }
-    quoteEl.textContent = q.text;
-    authorEl.textContent = q.author;
-    errorEl.style.display = "none";
-    hideLoading();
-  }
+
+    function getQuoteOfTheDay() {
+
+      const key = getQotdKey();
+
+      const saved = localStorage.getItem(key);
+
+      if (saved) {
+        return JSON.parse(saved);
+      }
+
+      // stable daily quote
+      const index =
+        (new Date().getFullYear() +
+          new Date().getMonth() +
+          new Date().getDate()) % quotes.length;
+
+      const qotd = quotes[index];
+
+      localStorage.setItem(key, JSON.stringify(qotd));
+
+      return qotd;
+    }
+
+    function renderQotd() {
+
+      const q = getQuoteOfTheDay();
+
+      document.getElementById("qotd-inner").innerHTML = `
+        <div id="qotd-quote">"${q.text}"</div>
+        <div id="qotd-author">${q.author}</div>
+      `;
+    }
+
+      function openQotd() {
+
+        renderQotd();
+
+        const panel = document.getElementById("qotd-panel");
+
+        // FORCE DISPLAY
+        panel.style.display = "block";
+
+        // animation
+        setTimeout(() => {
+          panel.classList.add("visible");
+        }, 10);
+      }
+
+      function closeQotd() {
+
+        const panel = document.getElementById("qotd-panel");
+
+        panel.classList.remove("visible");
+
+        setTimeout(() => {
+          panel.style.display = "none";
+        }, 300);
+      }
+
+      function toggleQotd() {
+
+        const panel = document.getElementById("qotd-panel");
+
+        const isOpen = panel.style.display === "block";
+
+        if (isOpen) {
+          closeQotd();
+        } else {
+          openQotd();
+        }
+      }
+
+      document.getElementById("qotd-bar")
+        .addEventListener("click", toggleQotd);
+
+      document.getElementById("qotdCloseBtn")
+        .addEventListener("click", closeQotd);
 
   function fetchdata() {
     showLoading();
@@ -518,6 +611,22 @@
     quotePools[categorySelect.value] = [];
     fetchdata();
   });
+  function formatdate() {
+    document.getElementById("currentDate").textContent =
+  new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+
+document.getElementById("qotd-date").textContent =
+  new Date().toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric"
+  });
+  }
 
   newQuoteBtn.addEventListener("click", fetchdata);
   fetchdata();
