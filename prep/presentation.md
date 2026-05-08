@@ -4,7 +4,7 @@
 * raise your hand if you have ever felt inspired one day, well have you ever wanted to hear the exact words for motivation, then you need to see this
 
 ## Product
-* live demo of the project and explain a bit about the work spent on it.
+* live demo of the project(show an example of preview) and explain a bit about the work spent on it.
 
 ## Process
 * Explain BTS leading to the project
@@ -12,10 +12,11 @@
   * click button, press right arrow and space bar
   * quote of the day
 ## Conclusion
+[actual MVP]
 * takeaway's
   * Json is a good way to transfer text based content from the web and very efficent at it too.
-  * because of how simple the structure is which are objects and arrays they can organize information while pulling from it.
-  *
+  * Because of how simple the structure is which is made of objects and arrays they can organize information that is received.
+  * Not only does Json 
 
 <!-- EXAMPLE
 
