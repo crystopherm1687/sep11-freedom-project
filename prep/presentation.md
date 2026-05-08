@@ -16,7 +16,7 @@
 * takeaway's
   * Json is a good way to transfer text based content from the web and very efficent at it too.
   * Because of how simple the structure is which is made of objects and arrays they can organize information that is received.
-  * Not only does Json 
+  * Not only does Json manage a lot of data it can request it from a server that would process everything and send it without changing a single thing.
 
 <!-- EXAMPLE
 
