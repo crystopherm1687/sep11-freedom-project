@@ -12,7 +12,10 @@
   * click button, press right arrow and space bar
   * quote of the day
 ## Conclusion
-*
+* takeaway's
+  * Json is a good way to transfer text based content from the web and very efficent at it too.
+  * because of how simple the structure is which are objects and arrays they can organize information while pulling from it.
+  *
 
 <!-- EXAMPLE
 
