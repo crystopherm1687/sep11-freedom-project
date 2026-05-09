@@ -1,15 +1,15 @@
 # Presentation Plan
 
 ## Hook
-* raise your hand if you have ever felt inspired one day, well have you ever wanted to hear the exact words for motivation, then you need to see this
+* Have you ever wanted to inspire someone, but didnt know what to say? well my can is useful for that.
 
 ## Product
 * live demo of the project(show an example of preview) and explain a bit about the work spent on it.
 
 ## Process
 * Explain BTS leading to the project
-  * code snippnets
-  * click button, press right arrow and space bar
+  * code snippnets(parts inside my blog that i reviewed deeply and learning log details. Had a challenge with obtaining the quotes at first, making a QOTD for users while still keeping it different from the main section, adding the date was a minor improvement, good color scheme was more like okay but gold and white/black match good together, making different catergories that actually work.)
+  * click button, press right arrow and space bar(made with .addEventListener)
   * quote of the day
 ## Conclusion
 [actual MVP]
