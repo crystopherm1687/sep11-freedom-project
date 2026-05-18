@@ -1,3 +1,8 @@
+Below is the complete HTML file with the fixes applied so you can copy–paste it back into your project. I made the QOTD rendering safe (uses textContent), wrapped localStorage parsing in try/catch, and ensured the app starts reliably. I also left a console.log for quick debugging. Every sentence above with actionable fixes came from common JS/DOM best practices.
+
+Paste the entire file (replace your current file):
+
+xml
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -322,6 +327,439 @@
   </div>
 
   <script>
+
+  const quotes = [
+    { text: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs", tags: ["inspiration", "life"] },
+    { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt", tags: ["motivation", "belief"] },
+    { text: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill", tags: ["success", "resilience"] },
+    { text: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt", tags: ["inspiration", "doubt"] },
+    { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis", tags: ["inspiration", "goals"] },
+    { text: "The only way to achieve the impossible is to believe it is possible.", author: "Charles Kingsleigh", tags: ["motivation", "possibility"] },
+    { text: "Success is walking from failure to failure with no loss of enthusiasm.", author: "Winston Churchill", tags: ["success", "persistence"] },
+    { text: "The best way to predict your future is to create it.", author: "Abraham Lincoln", tags: ["inspiration", "future"] },
+    { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson", tags: ["motivation", "growth"] },
+    { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt", tags: ["action", "motivation"] },
+    { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair", tags: ["fear", "courage"] },
+    { text: "Hardships often prepare ordinary people for an extraordinary destiny.", author: "C.S. Lewis", tags: ["resilience", "destiny"] },
+    { text: "Dream big and dare to fail.", author: "Norman Vaughan", tags: ["dreams", "failure"] },
+    { text: "What you get by achieving your goals is not as important as what you become by achieving your goals.", author: "Zig Ziglar", tags: ["growth", "goals"] },
+    { text: "Act as if what you do makes a difference. It does.", author: "William James", tags: ["impact", "action"] },
+    { text: "Success usually comes to those who are too busy to be looking for it.", author: "Henry David Thoreau", tags: ["success", "work"] },
+    { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson", tags: ["persistence", "time"] },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain", tags: ["action", "starting"] },
+    { text: "It always seems impossible until it's done.", author: "Nelson Mandela", tags: ["possibility", "perseverance"] },
+    { text: "Quality is not an act, it is a habit.", author: "Aristotle", tags: ["excellence", "habit"] },
+    { text: "Wisdom begins in wonder.", author: "Socrates", tags: ["wisdom", "curiosity"] },
+    { text: "Life is 10% what happens to us and 90% how we react to it.", author: "Charles R. Swindoll", tags: ["perspective", "life"] },
+    { text: "Keep your face always toward the sunshine—and shadows will fall behind you.", author: "Walt Whitman", tags: ["optimism", "positivity"] },
+    { text: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky", tags: ["opportunity", "action"] },
+    { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates", tags: ["wisdom", "humility"] },
+    { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius", tags: ["persistence", "patience"] },
+    { text: "In the middle of every difficulty lies opportunity.", author: "Albert Einstein", tags: ["opportunity", "difficulty"] },
+    { text: "Happiness depends upon ourselves.", author: "Aristotle", tags: ["happiness", "self"] },
+    { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey", tags: ["growth", "wisdom"] },
+    { text: "Whatever you are, be a good one.", author: "Abraham Lincoln", tags: ["excellence", "character"] },
+    { text: "The mind is everything. What you think you become.", author: "Buddha", tags: ["mindset", "growth"] },
+    { text: "An unexamined life is not worth living.", author: "Socrates", tags: ["wisdom", "reflection"] },
+    { text: "Your big opportunity may be right where you are now.", author: "Napoleon Hill", tags: ["opportunity", "perspective"] },
+    { text: "If you want to lift yourself up, lift up someone else.", author: "Booker T. Washington", tags: ["kindness", "growth"] },
+    { text: "Don't count the days, make the days count.", author: "Muhammad Ali", tags: ["motivation", "life"] },
+    { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs", tags: ["leadership", "innovation"] },
+    { text: "I find that the harder I work, the more luck I seem to have.", author: "Thomas Jefferson", tags: ["luck", "work"] },
+    { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney", tags: ["action", "starting"] },
+    { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca", tags: ["strength", "resilience"] },
+    { text: "Strive not to be a success, but rather to be of value.", author: "Albert Einstein", tags: ["value", "success"] },
+    { text: "A person who never made a mistake never tried anything new.", author: "Albert Einstein", tags: ["mistakes", "innovation"] },
+    { text: "Change your thoughts and you change your world.", author: "Norman Vincent Peale", tags: ["mindset", "change"] },
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs", tags: ["work", "passion"] },
+    { text: "Be the change that you wish to see in the world.", author: "Mahatma Gandhi", tags: ["change", "leadership"] },
+    { text: "If you are going through hell, keep going.", author: "Winston Churchill", tags: ["perseverance", "resilience"] },
+    { text: "I have not failed. I've just found 10,000 ways that won't work.", author: "Thomas Edison", tags: ["failure", "persistence"] },
+    { text: "Life is what happens when you're busy making other plans.", author: "John Lennon", tags: ["life", "presence"] },
+    { text: "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.", author: "Ralph Waldo Emerson", tags: ["identity", "courage"] },
+    { text: "Great minds discuss ideas; average minds discuss events; small minds discuss people.", author: "Eleanor Roosevelt", tags: ["wisdom", "intelligence"] },
+    { text: "Either you run the day, or the day runs you.", author: "Jim Rohn", tags: ["discipline", "control"] },
+    { text: "The purpose of our lives is to be happy.", author: "Dalai Lama", tags: ["happiness", "purpose"] },
+    { text: "Life is short, and it is up to you to make it sweet.", author: "Sarah Louise Delany", tags: ["life", "positivity"] },
+    { text: "You must be the change you wish to see in the world.", author: "Mahatma Gandhi", tags: ["leadership", "change"] },
+    { text: "Health is the greatest gift, contentment the greatest wealth, faithfulness the best relationship.", author: "Buddha", tags: ["health", "happiness"] },
+    { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu", tags: ["action", "starting"] },
+    { text: "Knowing yourself is the beginning of all wisdom.", author: "Aristotle", tags: ["wisdom", "self-awareness"] },
+    { text: "The only thing we have to fear is fear itself.", author: "Franklin D. Roosevelt", tags: ["fear", "courage"] },
+    { text: "You can't cross the sea merely by standing and staring at the water.", author: "Rabindranath Tagore", tags: ["action", "effort"] },
+    { text: "Don't let yesterday take up too much of today.", author: "Will Rogers", tags: ["focus", "presence"] },
+    { text: "If you judge people, you have no time to love them.", author: "Mother Teresa", tags: ["love", "judgment"] },
+    { text: "Spread love everywhere you go. Let no one ever come to you without leaving happier.", author: "Mother Teresa", tags: ["love", "kindness"] },
+    { text: "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart.", author: "Helen Keller", tags: ["beauty", "heart"] },
+    { text: "Imagination is more important than knowledge.", author: "Albert Einstein", tags: ["imagination", "knowledge"] },
+    { text: "Peace begins with a smile.", author: "Mother Teresa", tags: ["peace", "kindness"] },
+    { text: "Stay hungry, stay foolish.", author: "Steve Jobs", tags: ["curiosity", "ambition"] },
+    { text: "Kindness is the language which the deaf can hear and the blind can see.", author: "Mark Twain", tags: ["kindness", "humanity"] },
+    { text: "I attribute my success to this: I never gave or took any excuse.", author: "Florence Nightingale", tags: ["accountability", "success"] },
+    { text: "Nothing is impossible, the word itself says 'I'm possible'!", author: "Audrey Hepburn", tags: ["possibility", "positivity"] },
+    { text: "The power of imagination makes us infinite.", author: "John Muir", tags: ["imagination", "infinity"] },
+    { text: "Be kind whenever possible. It is always possible.", author: "Dalai Lama", tags: ["kindness", "ethics"] },
+    { text: "To handle yourself, use your head; to handle others, use your heart.", author: "Eleanor Roosevelt", tags: ["leadership", "empathy"] },
+    { text: "May you live all the days of your life.", author: "Jonathan Swift", tags: ["life", "presence"] },
+    { text: "Live as if you were to die tomorrow. Learn as if you were to live forever.", author: "Mahatma Gandhi", tags: ["learning", "life"] },
+    { text: "The limits of my language mean the limits of my world.", author: "Ludwig Wittgenstein", tags: ["language", "perspective"] },
+    { text: "Every strike brings me closer to the next home run.", author: "Babe Ruth", tags: ["resilience", "success"] },
+    { text: "A room without books is like a body without a soul.", author: "Marcus Tullius Cicero", tags: ["books", "wisdom"] },
+    { text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle", tags: ["habit", "excellence"] },
+    { text: "The unexamined life is not worth living.", author: "Socrates", tags: ["wisdom", "reflection"] },
+    { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde", tags: ["identity", "authenticity"] },
+    { text: "You only live once, but if you do it right, once is enough.", author: "Mae West", tags: ["life", "purpose"] },
+    { text: "In three words I can sum up everything I've learned about life: it goes on.", author: "Robert Frost", tags: ["life", "resilience"] },
+    { text: "If you tell the truth, you don't have to remember anything.", author: "Mark Twain", tags: ["truth", "honesty"] },
+    { text: "Friendship is the only cement that will ever hold the world together.", author: "Woodrow Wilson", tags: ["friendship", "connection"] },
+    { text: "Go confidently in the direction of your dreams! Live the life you've imagined.", author: "Henry David Thoreau", tags: ["dreams", "confidence"] },
+    { text: "Failure is the condiment that gives success its flavor.", author: "Truman Capote", tags: ["failure", "success"] },
+    { text: "If life were predictable it would cease to be life, and be without flavor.", author: "Eleanor Roosevelt", tags: ["life", "adventure"] },
+    { text: "To love and be loved is to feel the sun from both sides.", author: "David Viscott", tags: ["love", "connection"] },
+    { text: "Life is a long lesson in humility.", author: "James M. Barrie", tags: ["life", "humility"] },
+    { text: "Success is not how high you have climbed, but how you make a positive difference to the world.", author: "Roy T. Bennett", tags: ["success", "impact"] },
+    { text: "It is never too late to be what you might have been.", author: "George Eliot", tags: ["possibility", "regret"] },
+    { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", author: "Nelson Mandela", tags: ["resilience", "perseverance"] },
+    { text: "The more that you read, the more things you will know. The more that you learn, the more places you'll go.", author: "Dr. Seuss", tags: ["reading", "learning"] },
+    { text: "Only a life lived for others is a life worthwhile.", author: "Albert Einstein", tags: ["service", "purpose"] },
+    { text: "Doubt kills more dreams than failure ever will.", author: "Suzy Kassem", tags: ["doubt", "dreams"] },
+    { text: "Optimism is the faith that leads to achievement. Nothing can be done without hope and confidence.", author: "Helen Keller", tags: ["optimism", "hope"] },
+    { text: "When you reach the end of your rope, tie a knot in it and hang on.", author: "Franklin D. Roosevelt", tags: ["perseverance", "hope"] },
+    { text: "Don't settle for what life gives you; make life better and build something.", author: "Ashton Kutcher", tags: ["action", "ambition"] },
+    { text: "Life is 10% what happens to you and 90% how you respond to it.", author: "Charles R. Swindoll", tags: ["life", "attitude"] },
+    { text: "Life is either a daring adventure or nothing at all.", author: "Helen Keller", tags: ["adventure", "life"] }
+  ];
+
+  Below is the complete HTML file with the fixes applied so you can copy–paste it back into your project. I made the QOTD rendering safe (uses textContent), wrapped localStorage parsing in try/catch, and ensured the app starts reliably. I also left a console.log for quick debugging. Every sentence above with actionable fixes came from common JS/DOM best practices.
+
+Paste the entire file (replace your current file):
+
+xml
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Quote Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1714;
+      --surface: #211e1a;
+      --border: #2e2a25;
+      --accent: #c9963a;
+      --accent-dim: rgba(201, 150, 58, 0.12);
+      --text-primary: #ede8e0;
+      --text-secondary: #8a8278;
+      --text-muted: #504c47;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 56px 52px 48px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      font-size: 9rem;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.18;
+      position: absolute;
+      top: 8px;
+      left: 36px;
+      pointer-events: none;
+    }
+
+    .accent-line {
+      width: 32px;
+      height: 2px;
+      background: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    .spinner-wrap, .qotd-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 160px;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--border);
+      border-top: 2px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #content { display: none; }
+
+    #quote, #qotd-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+    }
+
+    #quote {
+      font-size: 1.45rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    #author, #qotd-author {
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    #author {
+      font-size: 0.8rem;
+      margin-bottom: 18px;
+    }
+
+    #author::before, #qotd-author::before { content: "— "; opacity: 0.5; }
+
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    select {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      border-radius: 2px;
+      outline: none;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 10px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: #c0624a;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .footer-label {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    #qotd-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      width: fit-content;
+    }
+
+    .qotd-pill {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      padding: 3px 8px;
+      white-space: nowrap;
+      opacity: 0.85;
+    }
+
+    .qotd-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    #qotd-panel {
+      display: none;
+      margin-bottom: 16px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 28px 32px 24px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    #qotd-panel.open { display: block; }
+    #qotd-panel.visible { opacity: 1; transform: translateY(0); }
+
+    .qotd-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .qotd-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+
+    #qotd-quote {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    #qotd-author {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card show" id="card">
+      <div class="spinner-wrap" id="spinner">
+        <div class="spinner"></div>
+      </div>
+
+      <div id="content">
+        <div class="accent-line"></div>
+        <div class="meta-row">
+          <select id="categorySelect" aria-label="Filter quotes by category">
+            <option value="all">All Categories</option>
+          </select>
+        </div>
+        <div id="quote" role="text" aria-live="polite"></div>
+        <div id="author" role="text"></div>
+        <div id="error" class="error"></div>
+        <div class="btn-row">
+          <button id="newQuoteBtn" aria-label="Get new quote">Next Quote</button>
+          <button id="copyBtn" aria-label="Copy quote" title="Copy to clipboard">Copy Quote</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer-label">Daily Wisdom</p>
+
+    <div id="qotd-panel" role="region" aria-label="Quote of the day">
+      <div class="qotd-label">
+        <span>Quote of the Day</span>
+        <button class="qotd-close" id="qotdCloseBtn" aria-label="Close">✕</button>
+      </div>
+      <div id="qotd-inner">
+        <div class="qotd-spinner"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <div id="qotd-bar" role="button" tabindex="0" aria-label="Show quote of the day">
+      <span class="qotd-pill">Quote of the Day</span>
+      <span class="qotd-date" id="qotd-date"></span>
+    </div>
+  </div>
+
+  <script>
+
   const quotes = [
     { text: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs", tags: ["inspiration", "life"] },
     { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt", tags: ["motivation", "belief"] },
@@ -437,6 +875,8 @@
   const qotdBar = document.getElementById("qotd-bar");
   const qotdDate = document.getElementById("qotd-date");
 
+  console.log("elements:", !!categorySelect, !!quoteEl, !!authorEl);
+
   let lastQuote = null;
 
   const categories = [...new Set(quotes.flatMap(q => q.tags))].sort();
@@ -456,10 +896,12 @@
     const filtered = getFilteredQuotes();
     if (filtered.length === 0) return null;
     if (filtered.length === 1) return filtered[0];
+
     let nextQuote;
     do {
       nextQuote = filtered[Math.floor(Math.random() * filtered.length)];
     } while (nextQuote === lastQuote);
+
     lastQuote = nextQuote;
     return nextQuote;
   }
@@ -561,15 +1003,28 @@
       const key = todayKey();
       const cached = localStorage.getItem(key);
       if (cached) {
-        renderQotd(JSON.parse(cached));
+        try {
+          const parsed = JSON.parse(cached);
+          renderQotd(parsed);
+          return;
+        } catch (e) {
+          console.warn("bad cached qotd — clearing", e);
+          localStorage.removeItem(key);
+        }
+      }
+
+      const filtered = getFilteredQuotes();
+      if (filtered.length === 0) {
+        renderQotd({ text: "No quotes available.", author: "System" });
         return;
       }
-      const filtered = getFilteredQuotes();
-      const q = filtered[Math.floor(Math.random() * filtered.length)] || quotes[0];
+
+      const q = filtered[Math.floor(Math.random() * filtered.length)];
       const qotd = { text: q.text, author: q.author };
       localStorage.setItem(key, JSON.stringify(qotd));
       renderQotd(qotd);
     } catch (err) {
+      console.error(err);
       renderQotd({ text: "Today’s quote could not load.", author: "System" });
     }
   }
@@ -602,9 +1057,21 @@
   });
   qotdCloseBtn.addEventListener("click", closeQotd);
 
-  document.addEventListener("DOMContentLoaded", () => {
-    fetchdata();
-  });
+  function startApp() {
+    try {
+      fetchdata();
+    } catch (err) {
+      console.error("startApp error", err);
+      showError("App failed to start.");
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startApp);
+  } else {
+    startApp();
+  }
   </script>
 </body>
 </html>
+
