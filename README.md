@@ -8,15 +8,20 @@ For my project, I chose to independently study **JSON api's** in order to help m
 
 ## Links
 
-[Product]()
+[Product](https://crystopherm1687.github.io/sep11-freedom-project/)
 
-[Presentation]()
+[Presentation](https://docs.google.com/presentation/d/1Hw5XgWpMw6Jym-8pln4k2BkE5zYhqDL_zYQEcshWvDc/edit)
 
 ## Implications
 ##### PROS
-*
+* Help motivate people to do better.
+* Create an atmosphere to make the user feel assured about their next actions.
+* Connect people with direct quotes that came from important people.
 ##### CONS
-*
+* designed only for motivated individuals.
+* Not much real impact for society.
+* repetitive content.
+* lack of emotional resonance.
 
 
 ## Blog
