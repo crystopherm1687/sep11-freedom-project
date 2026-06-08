@@ -15,9 +15,9 @@ Considering all that here is my actual [prep](https://github.com/crystopherm1687
 In this stage of the Engineering design process I can say that I am in the 8th and final stage because I have presented the project to an audience inside of a classroom and expo at school. The takeaways and suggestions that I got from those presentations gave me a solid idea of how others would think of it in the real world and improvements that should be made so that when it actually is displayed to a real audience they would know what it is and the features it would include in the project design.
 
 ### Skills
-* Constructive feedback
+* Constructive feedback: 
 Based on the suggestions i had from peers and the teacher I would say that the project has to be more learning based instead of using other sources as your point of support because the only situation where other sources would have to be used is only when you cannot figure out the problem by yourself and you need another perspective that can grasp everything in the project so far. My peers had also suggested adding pictures for my project to the specific person saying their words as well as non-repetitive quotes so the user does not see the other quotes again and just wants new people with ideas.
-* Audience analysis
+* Audience analysis: 
 Figuring out what the audience thought is difficult when presenting but when you get them to hear out your project and write a reflection about what could be added or improved felt very important for me to know because their thinking can deeply impact how my project turns out but because I had little time all I could do was add a small detail before presenting to them with a big audience and knowing only some of their suggestion would actually be done. I went with the flow and made the simpler suggestions a piority on my beyond mvp. Although i did not get to figure out the detail i wanted to be changed, it taught me that some things require time and patience to understand as well as the people you want to display your project to.
 
 
