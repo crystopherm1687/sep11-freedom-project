@@ -9,7 +9,7 @@ Learning to present at first seems overwhelming but for others they can just nat
 
 
 ### Sources
-Considering all that here is my actual [prep](https://github.com/crystopherm1687/sep11-freedom-project/blob/main/prep/presentation.md) work and my overall[slides](https://docs.google.com/presentation/d/1Hw5XgWpMw6Jym-8pln4k2BkE5zYhqDL_zYQEcshWvDc/edit) for the project.
+Considering all that here is my actual [prep](https://github.com/crystopherm1687/sep11-freedom-project/blob/main/prep/presentation.md) work and my overall [slides](https://docs.google.com/presentation/d/1Hw5XgWpMw6Jym-8pln4k2BkE5zYhqDL_zYQEcshWvDc/edit) for the project.
 
 ### EDP
 In this stage of the Engineering design process I can say that I am in the 8th and final stage because I have presented the project to an audience inside of a classroom and expo at school that mostly understand what I am trying to bring 
